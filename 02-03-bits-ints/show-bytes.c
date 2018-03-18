@@ -11,8 +11,10 @@ typedef unsigned char *byte_pointer;
 
 void show_bytes(byte_pointer start, size_t len) {
     size_t i;
+    // printf("Current Address: %p\n", start);
     for (i = 0; i < len; i++)
-	printf("%p\t0x%.2x\n", &start[i], start[i]); 
+	     // printf("%p\t0x%.2x\n", &start[i], start[i]);
+        printf(" %.2x", start[i]);
     printf("\n");
 }
 
@@ -33,15 +35,19 @@ void show_pointer(void *x) {
 /* $begin test-show-bytes */
 void test_show_bytes(int val) {
     int ival = val;
-    float fval = (float) ival;
+    float fval = (float) val;
     int *pval = &ival;
+    float *fpval = &fval;
     printf("Stack variable ival = %d\n", ival);
-    printf("(int)ival:\n");
+    printf("(int)val in %p\n",&ival);
     show_int(ival);
-    printf("(float)ival:\n", ival);
+    printf("(float)val in %p\n",&fval);
     show_float(fval);
-    printf("&ival:\n", ival);
+    
+    printf("&ival in %p\n",&pval);
     show_pointer(pval);
+    printf("&fpval in %p\n",&fpval);
+    show_pointer(fpval);
 }
 /* $end test-show-bytes */
 
