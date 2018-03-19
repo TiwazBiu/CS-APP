@@ -139,12 +139,7 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  /* if x and y have 1 in same position, then not x or not y 
-   * will make sure result of that position will be 0, other
-   * positions will be 1, at last another not make it fit our 
-   * need.
-   */
-  return ~(~x|~y);
+  return 2;
 }
 /* 
  * getByte - Extract byte n from word x
