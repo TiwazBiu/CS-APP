@@ -155,14 +155,12 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-
-
-
-
-
-
-
-  return 2;
+   /* shift the mask to corresponding byte, then mask X,
+    * shift back, get the final result.
+    */
+    int shift = (n << 3);
+    int mask = 0xFF;
+    return (mask & (x >> shift));
 
 }
 /* 
@@ -174,7 +172,15 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+    int as = (x >> n);
+    int mask = (0x01 << 31);
+    // printf("mask: %x\n", mask);
+    // if(n) mask = (mask >> (n - 1));
+    // else mask = ~n;
+    mask = ~((mask >> n) ^ (0x01 << (32 + ~n)));
+    return mask & as;
+
+    
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -184,7 +190,15 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+     int count = 0;
+     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     x = x >> 8;
+     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     x = x >> 8;
+     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     x = x >> 8;
+     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     return count;
 }
 /* 
  * bang - Compute !x without using !
