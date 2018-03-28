@@ -155,9 +155,6 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-   /* shift the mask to corresponding byte, then mask X,
-    * shift back, get the final result.
-    */
     int shift = (n << 3);
     int mask = 0xFF;
     return (mask & (x >> shift));
@@ -191,13 +188,17 @@ int logicalShift(int x, int n) {
  */
 int bitCount(int x) {
      int count = 0;
-     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
+     // printf("1:%d x:%08x\n", count,x);
      x = x >> 8;
-     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
+     // printf("2:%d x:%08x\n", count,x);
      x = x >> 8;
-     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
+     // printf("3:%d x:%08x\n", count,x);
      x = x >> 8;
-     count += !(!(0x01&x)) + !(!(0x02&x)) + !(!(0x04&x)) + !(!(0x08&x)) + !(!(0x10&x)) + !(!(0x20&x)) + !(!(0x40&x)) + !(!(0x80&x)) ;
+     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
+     // printf("4:%d x:%08x\n", count,x);
      return count;
 }
 /* 
@@ -208,7 +209,7 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+    return (((~x+1)|x)>>31)+1;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -217,7 +218,7 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 2;
+  return 1<<31;
 }
 /* 
  * fitsBits - return 1 if x can be represented as an 
@@ -229,7 +230,8 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  int  t = x>>(n+~1+1);
+  return (!t)|(!(t+1));
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -240,7 +242,8 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+
+    return (x+(((1<<n)+~1+1)&(x>>31)))>>n;
 }
 /* 
  * negate - return -x 
@@ -250,7 +253,7 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x+1;
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -260,7 +263,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
-  return 2;
+  return  (!(x>>31))&(!(!x));
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -270,6 +273,10 @@ int isPositive(int x) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
+  int p = (x+~y+1)>>31;
+  int sx = x>>31;
+  int sy = y>>31;
+
   return 2;
 }
 /*

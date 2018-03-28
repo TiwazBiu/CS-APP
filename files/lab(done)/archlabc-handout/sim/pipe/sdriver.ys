@@ -1,0 +1,327 @@
+#######################################################################
+# Test for copying block of size 4;
+#######################################################################
+	.pos 0
+main:	irmovl Stack, %esp  	# Set up stack pointer
+	irmovl Stack, %ebp  	# Set up base pointer
+
+	# Set up arguments for copy function and then invoke it
+	irmovl $4, %eax		# src and dst have 4 elements
+	pushl %eax
+	irmovl dest, %eax	# dst array
+	pushl %eax
+	irmovl src, %eax	# src array
+	pushl %eax
+	call ncopy		 
+	halt			# should halt with num nonzeros in %eax
+StartFun:
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len ints to dst.
+# Return the number of positive ints (>0) contained in src.
+#
+# Include your name and ID here.
+#
+# Describe how and why you modified the baseline code.
+##################################################################
+
+#Zhiyuan Zhang
+#ID:1500012772
+#Here is my complement
+
+#  I use the technology of 16-way loop unrolling
+
+#  I know it is brute and not graceful, but I just find that I
+#  have difficulty optimiazing the HCL pipeline, after trying and trying,
+#  I gave up optimiazing the HCL pipeline, and decided to rewrite the ncopy.ys.
+#  I resorted to Internet, and learn that we can make it by loop unrolling,
+#  (I can guarantee that also I resorted to Internet, I only learn how to implement
+#  it or optimize it, the code is written by my own. And I implement my own optimiazation.)
+#  so I began ,but I find that 2-way, 4-way, 8-way, and naive version
+#  loop unrolling will not get the full mark, so I use 16-way.	
+#  So, I use 16-way loop unrolling, let's call it a day :-(
+
+#  A naive 16-way loop unrolling will also fail, so I also make 2 optimizations
+
+#  Optimization 1: JT(jumptable)
+#  1.To reduce the cycles used in the remained elements, I use a jumptable
+#  2.Note that I use iaddl $-16,%edx to test whether len<16, and after jump,
+#  the n in %edx ,n<0, because iaddl changes the value in %edx so you may find 
+#  it strange before I use JumpTable, I addl %edx by 16. That is to say, 
+#  though that n in %edi, actually we have (n+16) elements remained!
+#
+#  Optimization 2: Reduce the update of address to reduce data hazard and calculate.
+#  Instead of update address of src and dst every phase(P0,P1,...),
+#  I update them in a loop, which leads to less calculate and less data hazard.
+
+#  Here are the meaning of some label:
+#  label Pi means the phase i of the 16-element loop
+#  label Ri means dealing with remained i elements
+
+##################################################################
+#JT(jumptable) dealing with Remain
+JT:     .long R0
+        .long R1
+        .long R2
+        .long R3
+        .long R4
+        .long R5
+        .long R6
+        .long R7
+        .long R8
+        .long R9
+        .long R10
+        .long R11
+        .long R12
+        .long R13
+        .long R14  
+        .long R15
+
+# Do not modify this portion
+# Function prologue.
+ncopy:	pushl %ebp		# Save old frame pointer
+	rrmovl %esp,%ebp	# Set up new frame pointer
+	pushl %esi		# Save callee-save regs
+	pushl %ebx
+	pushl %edi
+	mrmovl 8(%ebp),%ebx	# src
+	mrmovl 16(%ebp),%edx	# len
+	mrmovl 12(%ebp),%ecx	# dst
+
+##################################################################
+# You can modify this portion
+
+# Loop header
+	xorl %eax,%eax		# count = 0;
+	iaddl $-16,%edx		# len < 16
+	jl Remain		# if so, goto Remain:
+Loop:	mrmovl (%ebx), %esi	
+	rmmovl %esi, (%ecx)	
+	andl %esi, %esi		
+	jle P1		
+	iaddl $1, %eax		
+P1:     mrmovl 4(%ebx), %esi
+        rmmovl %esi, 4(%ecx)
+        andl %esi, %esi
+        jle P2
+        iaddl $1,%eax
+P2:     mrmovl 8(%ebx), %esi
+        rmmovl %esi, 8(%ecx)
+        andl %esi, %esi
+        jle P3
+        iaddl $1,%eax
+P3:     mrmovl 12(%ebx), %esi
+        rmmovl %esi, 12(%ecx)
+        andl %esi, %esi
+        jle P4
+        iaddl $1,%eax
+P4:     mrmovl 16(%ebx), %esi
+        rmmovl %esi, 16(%ecx)
+        andl %esi, %esi
+        jle P5
+        iaddl $1,%eax
+P5:     mrmovl 20(%ebx), %esi
+        rmmovl %esi, 20(%ecx)
+        andl %esi, %esi
+        jle P6
+        iaddl $1,%eax
+P6:     mrmovl 24(%ebx), %esi
+        rmmovl %esi, 24(%ecx)
+        andl %esi, %esi
+        jle P7
+        iaddl $1,%eax
+P7:     mrmovl 28(%ebx), %esi
+        rmmovl %esi, 28(%ecx)
+        andl %esi, %esi
+        jle P8
+        iaddl $1,%eax
+P8:     mrmovl 32(%ebx), %esi
+        rmmovl %esi, 32(%ecx)
+        andl %esi, %esi
+        jle P9
+        iaddl $1,%eax
+P9:     mrmovl 36(%ebx), %esi
+        rmmovl %esi, 36(%ecx)
+        andl %esi, %esi
+        jle P10
+        iaddl $1,%eax
+P10:    mrmovl 40(%ebx), %esi
+        rmmovl %esi, 40(%ecx)
+        andl %esi, %esi
+        jle P11
+        iaddl $1,%eax
+P11:    mrmovl 44(%ebx), %esi
+        rmmovl %esi, 44(%ecx)
+        andl %esi, %esi
+        jle P12
+        iaddl $1,%eax
+P12:    mrmovl 48(%ebx), %esi
+        rmmovl %esi, 48(%ecx)
+        andl %esi, %esi
+        jle P13
+        iaddl $1,%eax
+P13:    mrmovl 52(%ebx), %esi
+        rmmovl %esi, 52(%ecx)
+        andl %esi, %esi
+        jle P14
+        iaddl $1,%eax
+P14:    mrmovl 56(%ebx), %esi
+        rmmovl %esi, 56(%ecx)
+        andl %esi, %esi
+        jle P15
+        iaddl $1,%eax
+P15:    mrmovl 60(%ebx), %esi
+        rmmovl %esi, 60(%ecx)
+        andl %esi, %esi
+        jle P16
+        iaddl $1, %eax
+P16:	iaddl $64,  %ebx		# src+=16
+	iaddl $64,  %ecx		# dst+=16
+	iaddl $-16, %edx		# len-=16 and judge len>=0?
+	jge Loop			# if so, goto Loop:
+Remain: iaddl $16,%edx			# note though that n in %edi, actually we have (n+16) elements remained!
+	addl %edx, %edx
+        addl %edx, %edx
+        mrmovl JT(%edx), %edx
+        pushl %edx
+        ret
+R16:    mrmovl 60(%ebx), %esi
+        rmmovl %esi, 60(%ecx)
+        andl %esi, %esi
+        jle R15
+        iaddl $1, %eax
+R15:    mrmovl 56(%ebx), %esi
+        rmmovl %esi, 56(%ecx)
+        andl %esi, %esi
+        jle R14
+        iaddl $1, %eax
+R14:    mrmovl 52(%ebx), %esi
+        rmmovl %esi, 52(%ecx)
+        andl %esi, %esi
+        jle R13
+        iaddl $1, %eax
+R13:    mrmovl 48(%ebx), %esi
+        rmmovl %esi, 48(%ecx)
+        andl %esi, %esi
+        jle R12
+        iaddl $1, %eax
+R12:    mrmovl 44(%ebx), %esi
+        rmmovl %esi, 44(%ecx)
+        andl %esi, %esi
+        jle R11
+        iaddl $1, %eax
+R11:    mrmovl 40(%ebx), %esi
+        rmmovl %esi, 40(%ecx)
+        andl %esi, %esi
+        jle R10
+        iaddl $1, %eax
+R10:    mrmovl 36(%ebx), %esi
+        rmmovl %esi, 36(%ecx)
+        andl %esi, %esi
+        jle R9
+        iaddl $1, %eax
+R9:     mrmovl 32(%ebx), %esi
+        rmmovl %esi, 32(%ecx)
+        andl %esi, %esi
+        jle R8
+        iaddl $1, %eax
+R8:     mrmovl 28(%ebx), %esi
+        rmmovl %esi, 28(%ecx)
+        andl %esi, %esi
+        jle R7
+        iaddl $1, %eax
+R7:     mrmovl 24(%ebx), %esi
+        rmmovl %esi, 24(%ecx)
+        andl %esi, %esi
+        jle R6
+        iaddl $1, %eax
+R6:     mrmovl 20(%ebx), %esi
+        rmmovl %esi, 20(%ecx)
+        andl %esi, %esi
+        jle R5
+        iaddl $1, %eax
+R5:     mrmovl 16(%ebx), %esi
+        rmmovl %esi, 16(%ecx)
+        andl %esi, %esi
+        jle R4
+        iaddl $1, %eax
+R4:     mrmovl 12(%ebx), %esi
+        rmmovl %esi, 12(%ecx)
+        andl %esi, %esi
+        jle R3
+        iaddl $1, %eax
+R3:     mrmovl 8(%ebx), %esi
+        rmmovl %esi, 8(%ecx)
+        andl %esi, %esi
+        jle R2
+        iaddl $1, %eax
+R2:     mrmovl 4(%ebx), %esi
+        rmmovl %esi, 4(%ecx)
+        andl %esi, %esi
+        jle R1
+        iaddl $1, %eax
+R1:     mrmovl (%ebx), %esi
+        rmmovl %esi, (%ecx)
+        andl %esi, %esi
+        jle R0
+        iaddl $1, %eax
+R0:     jmp Done
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	popl %edi               # Restore callee-save registers
+	popl %ebx
+	popl %esi
+	rrmovl %ebp, %esp
+	popl %ebp
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+EndFun:
+
+###############################
+# Source and destination blocks 
+###############################
+	.align 4
+src:
+	.long -1
+	.long 2
+	.long -3
+	.long 4
+	.long 0xbcdefa # This shouldn't get moved
+
+	.align 16
+Predest:
+	.long 0xbcdefa
+dest:
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+Postdest:
+	.long 0xdefabc
+
+.align 4
+# Run time stack
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+
+Stack:
