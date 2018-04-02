@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     vim \
     build-essential \
     gcc-multilib \
+    gdb \
+    man \
     git-core && rm -rf /var/lib/apt/lists/*
 RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
     && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
