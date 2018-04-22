@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y \
     man \
     inetutils-ping \
     net-tools \
-    git-core && rm -rf /var/lib/apt/lists/*
-    && cp /usr/share/vim/vim80/vimrc_example.vim  ~/.vimrc
+    git-core && rm -rf /var/lib/apt/lists/* \
 # config .vimrc
-RUN echo "set number" >> /root/.vimrc \
+RUN cp /usr/share/vim/vim74/vimrc_example.vim  ~/.vimrc \
+    && echo "set number" >> /root/.vimrc \
     && echo "set relativenumber" >> /root/.vimrc
 
 # install oh-my-zsh
