@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     servaddr.sin_port = htons(port_num);
     // 服务器绑定网卡所有IP地址
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
+    // 最后得到在本地所有地址的port端口监听的套接字
     Bind(sockfd, (SA *) &servaddr, sizeof(servaddr));
 
     while (1){
@@ -29,7 +29,8 @@ int main(int argc, char const *argv[])
         
         bzero(&recvframe, sizeof(recvframe));
         // 服务端由recvfrom接收信息并得知客户端地址,并不需要事先知道
-        int n = Recvfrom(sockfd, &recvframe, sizeof(recvframe), 0, pcliaddr, &salen);
+        int n = Recvfrom(sockfd, &recvframe, sizeof(recvframe), 0, 
+                         pcliaddr, &salen);
         printf("%d: %s\n", recvframe.seqnum, recvframe.data);
 
         // 服务器对发送信息的客户端进行回应

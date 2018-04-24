@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include "unp.h"
 
-#define MAXBUF     100
+#define DGLEN     2000
 #define DF         struct DataFrame
 #define AF        struct AckFrame
 #define IS_CORRUPTED  1
@@ -11,7 +11,7 @@ struct DataFrame
 {
     unsigned int seqnum;
     bool flag;
-    char data[MAXBUF];
+    char data[DGLEN];
 };
 
 struct AckFrame

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "miscellaneous.h"
 
 
 // 以probability的概率返回IS_CORRUPTED
