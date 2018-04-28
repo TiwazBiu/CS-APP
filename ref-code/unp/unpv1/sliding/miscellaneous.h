@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include "unp.h"
 
-#define DGLEN     2000
+#define DGLEN     100
 #define DF         struct DataFrame
 #define AF        struct AckFrame
 #define IS_CORRUPTED  1

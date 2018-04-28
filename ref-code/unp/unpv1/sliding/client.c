@@ -1,5 +1,9 @@
 #include "miscellaneous.h"
 // 隐式地采用错误处理(调用开头大写的库函数名表示用eroor handler包装)
+
+
+static void sig_alrm(int signo);
+
 int main(int argc, char const *argv[])
 {
     int sockfd;
@@ -26,6 +30,9 @@ int main(int argc, char const *argv[])
     // 打开指定读取文件
     int fd = Open(argv[3], O_RDONLY, 0);
 
+    // 设置定时器回调函数
+    Signal(SIGALRM, sig_alrm);
+    
     // 用于格式控制
     int bound = 60;
     while(Read(fd, dgframe.data, sizeof(dgframe.data))){
@@ -48,21 +55,33 @@ int main(int argc, char const *argv[])
         
         // 接收服务器的回应
         AF ackframe;
-        Read(sockfd, &ackframe, sizeof(ackframe));
-        
-        //解析收到的ackframe
-        printf("Get response from server:\n");
-        printf("RECEIVED: %d bytes\n",ackframe.recvbytes);
-        printf("Sequence number: %d\n", ackframe.seqnum);
-        if(ackframe.flag == NOT_CORRUPTED)
-            printf("not corrupted\n");
-        else
-            printf("but is corrupted\n");
-        
-        // 分界线
+        // 设置定时器, 服务器在一定时间不响应则调用回调函数中断read
+        alarm(1);
+        int n;
+        if( (n = read(sockfd, &ackframe, sizeof(ackframe)) < 0)){
+            if(errno == EINTR)
+                fprintf(stderr, "Server response timeout\n");
+            else
+                err_sys("read error");
+        } else {
+            // 收到回应,解除定时器
+            alarm(0);
+            //解析收到的ackframe
+            printf("Get response from server:\n");
+            printf("RECEIVED: %d bytes\n",ackframe.recvbytes);
+            printf("Sequence number: %d\n", ackframe.seqnum);
+        }
+
         for(int i = 0; i < bound; ++i) 
             printf("-");
-        getchar();
+            getchar();
+        
     }
     return 0;
+}
+
+
+static void sig_alrm(int signo)
+{
+    return;
 }

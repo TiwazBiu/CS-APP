@@ -31,12 +31,13 @@ int main(int argc, char const *argv[])
         // 服务端由recvfrom接收信息并得知客户端地址,并不需要事先知道
         int n = Recvfrom(sockfd, &recvframe, sizeof(recvframe), 0, 
                          pcliaddr, &salen);
+        if(recvframe.flag == IS_CORRUPTED) 
+            continue;
         printf("%d: %s\n", recvframe.seqnum, recvframe.data);
 
         // 服务器对发送信息的客户端进行回应
         // 如果接收到的帧flag设置为IS_CORRUPTED,则不应答
-        if(recvframe.flag == IS_CORRUPTED) 
-            continue;
+        
         AF ackframe;
         ackframe.seqnum = recvframe.seqnum;
         ackframe.flag = recvframe.flag;
