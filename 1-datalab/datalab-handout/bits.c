@@ -2,7 +2,7 @@
  * CS:APP Data Lab 
  * 
  * <Please put your name and userid here>
- * 
+ * xiezhiwen
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
  *
@@ -139,12 +139,8 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  /* if x and y have 1 in same position, then not x or not y 
-   * will make sure result of that position will be 0, other
-   * positions will be 1, at last another not make it fit our 
-   * need.
-   */
-  return ~(~x|~y);
+  // DeMorgan's laws 
+  return ~(~x | ~y);
 }
 /* 
  * getByte - Extract byte n from word x
@@ -155,9 +151,7 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-    int shift = (n << 3);
-    int mask = 0xFF;
-    return (mask & (x >> shift));
+  return (x>>(n<<3))&0xFF;
 
 }
 /* 
@@ -169,15 +163,12 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-    int as = (x >> n);
-    int mask = (0x01 << 31);
-    // printf("mask: %x\n", mask);
-    // if(n) mask = (mask >> (n - 1));
-    // else mask = ~n;
-    mask = ~((mask >> n) ^ (0x01 << (32 + ~n)));
-    return mask & as;
-
-    
+  /* 
+   * use property of &
+   * and expresion of opposite number in two's complement 
+   */
+  return (x>>n)&~(~0<<(31+(~n+1))<<1);
+  // return (unsigned)x >> n;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -187,19 +178,42 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-     int count = 0;
-     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
-     // printf("1:%d x:%08x\n", count,x);
-     x = x >> 8;
-     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
-     // printf("2:%d x:%08x\n", count,x);
-     x = x >> 8;
-     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
-     // printf("3:%d x:%08x\n", count,x);
-     x = x >> 8;
-     count += (0x01&x) + ((0x02&x)>>1) + ((0x04&x)>>2) + ((0x08&x)>>3) + ((0x10&x)>>4) + ((0x20&x)>>5) + ((0x40&x)>>6) + ((0x80&x)>>7);
-     // printf("4:%d x:%08x\n", count,x);
-     return count;
+
+  // int mask1 = 0x55555555; // 0b01...
+  // int mask2 = 0x33333333; // 0b0011...
+  // int mask3 = 0x0F0F0F0F; // 0b00001111...
+  // int mask4 = 0x00FF00FF; // 0b0000000011111111...
+  // int mask5 = 0x0000FFFF; // 0b00000000000000001111111111111111...
+  // to fit the requirement of the problem, generate mask by shift
+  int mask1 = 0x55;
+  int mask2 = 0x33;
+  int mask3 = 0x0F;
+  int mask4 = 0xFF;
+  int mask5 = 0xFF;
+  // get 0x55555555
+  mask1 = mask1|(mask1<<8);
+  mask1 = mask1|(mask1<<16);
+  // get 0x33333333
+  mask2 = mask2|(mask2<<8);
+  mask2 = mask2|(mask2<<16);
+  // get 0x0F0F0F0F
+  mask3 = mask3|(mask3<<8);
+  mask3 = mask3|(mask3<<16);
+  // get 0x00FF00FF
+  mask4 = mask4|(mask4<<16);
+  // get 0x0000FFFF
+  mask5 = mask5|(mask5<<8);
+
+  x = (x&mask1) + ((x>>1)&mask1); // 2/(2^1-1)
+  x = (x&mask2) + ((x>>2)&mask2); // 4/(2^2-1)
+  // x = (x&mask3) + ((x>>4)&mask3); // 8/(2^4-1)
+  // x = (x&mask4) + ((x>>8)&mask4); // 16/(2^8-1)
+  // x = (x&mask5) + ((x>>16)&mask5); // 32/(2^16-1)
+  // optimize to use less operators
+  x = (x+(x>>4))&mask3; // 8/(2^4-1)
+  x = (x+(x>>8))&mask4; // 16/(2^8-1)
+  x = (x+(x>>16))&mask5; // 32/(2^16-1)
+  return x;
 }
 /* 
  * bang - Compute !x without using !
@@ -209,7 +223,7 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-    return (((~x+1)|x)>>31)+1;
+  return (((~x+1)|x)>>31) + 1;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -230,8 +244,17 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  int  t = x>>(n+~1+1);
-  return (!t)|(!(t+1));
+/*
+ * first convert positive number to negative number minus 1
+ * and keep negative number unchanged
+ * then shift right 32-n and shift back to check
+ * whether or not the shifted and the original are the same
+ */
+  int sign = x>>31;
+  int op = ~sign;
+  int shift = 33 + (~n);
+  x = x^op;
+  return !(x^(x<<shift>>shift));
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -242,8 +265,13 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-
-    return (x+(((1<<n)+~1+1)&(x>>31)))>>n;
+  /*
+   * first round down, then if it's negative and
+   * last n bits are not zero, add 1 to the result.
+   */
+    int sign = x>>31;
+    int lastn = x&~(~0<<n);
+    return (x>>n) + (0x01&sign&!!lastn);
 }
 /* 
  * negate - return -x 
@@ -263,7 +291,11 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
-  return  (!(x>>31))&(!(!x));
+  // check it's non-negative and the opposite number is negotive 
+  // return (!(x>>31))&(!(((~x+1)>>31)+1));
+
+  // check it's non-negative, then check it's not zero
+  return (!(x>>31))&(!!x);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -273,11 +305,22 @@ int isPositive(int x) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int p = (x+~y+1)>>31;
-  int sx = x>>31;
-  int sy = y>>31;
-
-  return 2;
+/* there are two cases, one is when the sign of y is positive
+ * and sign of x is negative, y>x sure enough.
+ * another one is when sign of y-x is positive, we need to exclude
+ * the overflow case where y is negative and x is positive, and y-x overflow
+ * to become positive.
+ */
+  int signx = x>>31;
+  int signy = y>>31;
+  // -1 means y negative, x positive
+  // 0 means same sign
+  // 1 means y positive, x negative
+  int signd = signy+~signx+1;
+  // while exclude the case where y is negative and x is positive,
+  // 0 means y >= x, -1 means y < x
+  int diff = (y+~x+1)>>31;
+  return (!((signd+1)^0x02))|(!diff&!(signd>>1));
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -287,7 +330,24 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
-  return 2;
+  int n = 0;
+  // if(x>>16 == 0) {n += 16; x <<= 16;}
+  // if(x>>24 == 0) {n += 8; x <<= 8;}
+  // if(x>>28 == 0) {n += 4; x <<= 4;}
+  // if(x>>30 == 0) {n += 2; x <<= 2;}
+  // if(x>>31 == 0) {n += 1; x <<= 1;}
+  int mask1,mask2,mask3,mask4,mask5;
+  mask1 = (~(!(x>>16)+(~0)))&16;
+  n += mask1; x <<= mask1;
+  mask2 = (~(!(x>>24)+(~0)))&8;
+  n += mask2; x <<= mask2;
+  mask3 = (~(!(x>>28)+(~0)))&4;
+  n += mask3; x <<= mask3;
+  mask4 = (~(!(x>>30)+(~0)))&2;
+  n += mask4; x <<= mask4;
+  mask5 = (~(!(x>>31)+(~0)))&1;
+  n += mask5;
+  return 32+(~n);
 }
 /* 
  * float_neg - Return bit-level equivalent of expression -f for
@@ -301,8 +361,16 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
-}
+ /* if the frac part is all-zero or
+  * exponential part is not all-ones,
+  * it won't be NaN, so turn its sign.
+  */
+  // ignore sign
+  unsigned v = uf<<1;
+  int a = !(v<<8);
+  int b = !!(v>>24^0xFF);
+  return uf^((a|b)<<31);
+ }
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
  *   Result is returned as unsigned int, but
@@ -313,7 +381,63 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  return 2;
+/*
+ * first change the negative number to the positive counter part,
+ * notice 0x80000000 is 2147483648 if we see it as unsigned
+ * and -2147483648 when interpreted as integer, so the only special
+ * case is only 0, exclude that first.
+ * then get the length of the integer expression, calculate the exponential
+ * part, based on that, we get frac part in two different cases, one is length
+ * less than 24, so no need for rounding, we get the result directly, another is
+ * when rounding may be needed, round up when round part is bigger than half, or 
+ * when round part is equal to half and the last part of frac is 1(odd), this is 
+ * round to even method.
+ */
+  unsigned sign;
+  unsigned tmp;
+  unsigned len;
+  unsigned frac;
+  unsigned expo;
+  unsigned rounding;
+  unsigned round_part;
+  unsigned shift;
+  unsigned mid;
+  if (!x){
+    return x;
+  } else if (x>0) {
+    sign = 0;
+  } else {
+    sign = 1;
+    x = -x;
+  }
+  tmp = x;len = 0;
+  while (tmp) {++len; tmp>>=1;}
+  // n = 0;
+  // if (!(tmp>>32)) {n+=32;tmp<<=32;}
+  // if (!(tmp>>48)) {n+=16;tmp<<=16;}
+  // if (!(tmp>>56))  {n+=8;tmp<<=8;}
+  // if (!(tmp>>60))  {n+=4;tmp<<=4;}
+  // if (!(tmp>>62))  {n+=2;tmp<<=2;}
+  // if (!(tmp>>63))  {n+=1;}
+  // len = 64-n;
+  expo = 126 + len;
+  rounding = 0;
+  shift = 24-len;
+  if (len <= 24) {
+    frac = x<<shift;
+  } else {
+    shift = -shift;
+    frac = x>>shift;
+    round_part = x&~(~0<<shift);
+    mid = 1<<(shift-1);
+    if (round_part > mid || 
+      (round_part == mid && (frac&1))){
+      rounding = 1;
+    }
+  }
+  frac = frac&0x7fffff;
+  return (sign<<31|expo<<23|frac) + rounding;
+
 }
 /* 
  * float_twice - Return bit-level equivalent of expression 2*f for
@@ -327,5 +451,46 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-  return 2;
+  /* if uf is infinity or NaN, return directly,
+ * non-normalized is surprisingly easy case to 
+ * deal with, just shift frac left 1 bit, it will
+ * work either less than 0.5 or bigger than that,
+ * and deal with overflow case while expo is 0xFF-1,
+ * at last, it's the most common case where you just add
+ * exponential part and finish.
+ */
+  unsigned expo = uf<<1>>24;
+  unsigned mask = ~0<<23;
+  unsigned frac = uf&~mask;
+  if (expo == 0xFF){
+    return uf;
+  } else if (expo == 0xFE){
+    return (uf|(0xFF<<23))&mask;
+  } else if (!expo){
+    // non-normalized
+    frac <<= 1;
+    return (uf&mask)|frac;
+  }  else {
+    // normalized case, most common
+    expo += 1;
+    return (uf&~(0xFF<<23))|(expo<<23);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

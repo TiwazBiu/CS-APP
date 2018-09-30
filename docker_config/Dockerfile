@@ -1,0 +1,30 @@
+FROM ubuntu:latest
+
+# necessary packages
+RUN apt-get update && apt-get install -y \
+    zsh \
+    vim \
+    build-essential \
+    gcc-multilib \
+    gdb \
+    clang \
+    valgrind \
+    git-core \
+    inetutils-ping \
+    net-tools \
+    man  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# install oh-my-zsh
+RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
+    && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
+    && chsh -s /bin/zsh
+
+# config vim
+COPY supertab.vmb /root/.vim/supertab.vmb
+COPY vimrc /root/.vimrc
+RUN vim -S /root/.vim/supertab.vmb -c ':q!'  2>&1
+
+ENV SHELL /bin/zsh
+

