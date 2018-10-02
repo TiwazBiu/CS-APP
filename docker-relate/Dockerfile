@@ -35,12 +35,14 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
-# git user set
-RUN git config --global user.email "zhiwenxie1900@outlook.com" && \
-    git config --global user.name "xiezhiwen"
-
 # config  zsh
 COPY zshrc /root/.zshrc
+COPY zsh_history /root/.zsh_history
+
+# git config
+RUN git config --global user.email "zhiwenxie1900@outlook.com" && \
+    git config --global user.name "xiezhiwen" \
+    git config --global push.default simple
 
 ENV SHELL /bin/zsh
 

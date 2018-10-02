@@ -1,0 +1,70 @@
+: 1538318854:0;ls
+: 1538318898:0;vim ~/.zshrc
+: 1538318934:0;source ~/.zshrc
+: 1538318935:0;ls
+: 1538318974:0;cd tmp
+: 1538318975:0;ls
+: 1538318980:0;cd ..
+: 1538318980:0;ls
+: 1538318986:0;cd lab
+: 1538318990:0;ls
+: 1538319003:0;git commit -a
+: 1538319083:0;ls
+: 1538319197:0;cd docker_config
+: 1538319199:0;ls
+: 1538319209:0;cd ..
+: 1538319235:0;mv docker_config docker-relate
+: 1538319244:0;git status
+: 1538319256:0;git commit -a
+: 1538319292:0;cd docker-relate
+: 1538319294:0;ls
+: 1538319296:0;cd ..
+: 1538319326:0;git add .
+: 1538319332:0;git status
+: 1538319352:0;git commit -a
+: 1538319374:0;git status
+: 1538319662:0;vim ~/.zsh_history
+: 1538319749:0;man valgrind
+: 1538357501:0;git --version
+: 1538357564:0;git config user.name
+: 1538357664:0;git config --list
+: 1538358649:0;ls
+: 1538358736:0;echo 'CMU ICS 15-213 project, 8 lab in total' > README
+: 1538358743:0;git status
+: 1538358758:0;git add README
+: 1538358764:0;git status
+: 1538358978:0;vim README
+: 1538359033:0;git status
+: 1538359100:0;git add README
+: 1538359105:0;git status
+: 1538359134:0;man man
+: 1538362813:0;git status
+: 1538363080:0;ls
+: 1538363087:0;vim .gitignore
+: 1538363138:0;git status
+: 1538363149:0;git add .gitignore
+: 1538363246:0;git status
+: 1538363255:0;git diff
+: 1538363320:0;git diff --staged
+: 1538363433:0;git difftool
+: 1538363453:0;git difftool --staged
+: 1538363779:0;git log
+: 1538364245:0;git remote
+: 1538364359:0;git status
+: 1538364376:0;git commit
+: 1538364412:0;git push
+: 1538364488:0;git config --global push.default simple
+: 1538364541:0;ls
+: 1538364551:0;git status
+: 1538364556:0;gs
+: 1538364567:0;vim ~/.zshrc
+: 1538364624:0;gs
+: 1538364627:0;source ~/.zshrc
+: 1538364631:0;gs
+: 1538364641:0;vim ~/.zshrc
+: 1538364675:0;mv ~/.zshrc docker-relate/zshrc
+: 1538364680:0;git diff
+: 1538364710:0;gs
+: 1538364732:0;git add docker-relate/Dockerfile docker-relate/zshrc
+: 1538364783:0;cp docker-relate/zshrc ~/.zshrc
+: 1538364803:0;cp ~/.zsh_history docker-relate/zsh_history
