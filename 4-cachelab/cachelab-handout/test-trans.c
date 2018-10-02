@@ -69,8 +69,10 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
             "Step 1: Validating and generating memory traces\n",i,func_counter);
         /* Use valgrind to generate the trace */
 
-        sprintf(cmd, "valgrind --tool=lackey --trace-mem=yes --log-fd=1 -v "
-                "./tracegen -M %d -N %d -F %d  > trace.tmp", M, N,i);
+        // sprintf(cmd, "valgrind --tool=lackey --trace-mem=yes --log-fd=1 -v "
+        //         "./tracegen -M %d -N %d -F %d  > trace.tmp", M, N,i);
+        sprintf(cmd, "valgrind --tool=lackey --trace-mem=yes --log-file=trace.tmp -v "
+                "./tracegen -M %d -N %d -F %d", M, N,i);
         flag=WEXITSTATUS(system(cmd));
         if (0!=flag) {
             printf("Validation error at function %d! "
