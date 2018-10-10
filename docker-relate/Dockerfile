@@ -41,7 +41,7 @@ COPY zsh_history /root/.zsh_history
 
 # git config
 RUN git config --global user.email "zhiwenxie1900@outlook.com" && \
-    git config --global user.name "xiezhiwen" \
+    git config --global user.name "xiezhiwen" && \
     git config --global push.default simple
 
 ENV SHELL /bin/zsh
