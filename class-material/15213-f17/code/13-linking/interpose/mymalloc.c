@@ -24,6 +24,8 @@
 /* malloc wrapper function */
 void *malloc(size_t size)
 {
+    static __thread int enter = 0;
+    enter++; /* every time enter malloc, enter will add by 1 */
     void *(*mallocp)(size_t size);
     char *error;
 
@@ -33,7 +35,14 @@ void *malloc(size_t size)
         exit(1);
     }
     char *ptr = mallocp(size); /* Call libc malloc */
-    printf("malloc(%d) = %p\n", (int)size, ptr);
+    /* in case printf call malloc again, make sure call printf only once.
+     * in fact, the best option is to write my own printf rather than use 
+     * stdlib to do the task.
+     * unexpected call to malloc will cause circle call, and lead to
+     * segmentation fault due to blowed stack.
+     */
+    if (enter == 1) fprintf(stdout, "malloc(%d) = %p\n", (int)size, ptr);
+    enter = 0;
     return ptr;
 }
 
@@ -52,7 +61,7 @@ void free(void *ptr)
         exit(1);
     }
     freep(ptr); /* Call libc free */
-    printf("free(%p)\n", ptr);
+    fprintf(stderr, "free(%p)\n", ptr);
 }
 #endif
 /* $end interposer */

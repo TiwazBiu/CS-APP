@@ -13,10 +13,11 @@
 
 int main(int argc, char *argv[])
 {
-    int i;
-    for (i = 1; i < argc; i++) {
-	void *p = malloc(atoi(argv[i]));
-	free(p);
+    // fprintf(stderr, "hello world to stderr\n");
+    // printf("hello world to stdout\n");
+    for (int i = 1; i < argc; i++) {
+	   void *p = malloc(atoi(argv[i]));
+	   free(p);
     }
     return(0); 
 }
