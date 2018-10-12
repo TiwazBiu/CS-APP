@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/26-parallelism/pqsort-dbug</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/26-parallelism/pqsort-dbug</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=D">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/26-parallelism/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                28-Nov-2017 15:28  795   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.c">csapp.c</a>                 28-Nov-2017 15:28   17K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.h">csapp.h</a>                 28-Nov-2017 15:28  5.5K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="csapp.o">csapp.o</a>                 28-Nov-2017 15:28   18K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="pqsort-12-11-10.c">pqsort-12-11-10.c</a>       28-Nov-2017 15:28  6.0K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="pqsort.c">pqsort.c</a>                28-Nov-2017 15:28   14K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="pqsort.h">pqsort.h</a>                28-Nov-2017 15:28  1.1K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="pqsort.o">pqsort.o</a>                28-Nov-2017 15:28   11K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="pqsort.xlsx">pqsort.xlsx</a>             28-Nov-2017 15:28   12K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="realtimer.c">realtimer.c</a>             28-Nov-2017 15:28  437   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="realtimer.h">realtimer.h</a>             28-Nov-2017 15:28  176   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="realtimer.o">realtimer.o</a>             28-Nov-2017 15:28  1.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="sortbench">sortbench</a>               28-Nov-2017 15:28   34K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="sortbench-data.txt">sortbench-data.txt</a>      28-Nov-2017 15:28  799   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="sortbench-lc">sortbench-lc</a>            28-Nov-2017 15:28   35K  
+<img src="/icons/p.gif" alt="[   ]"> <a href="sortbench-run.pl">sortbench-run.pl</a>        28-Nov-2017 15:28  1.1K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="sortbench.c">sortbench.c</a>             28-Nov-2017 15:28  3.5K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="taskq.c">taskq.c</a>                 28-Nov-2017 15:28  2.0K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="taskq.h">taskq.h</a>                 28-Nov-2017 15:28  1.1K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="taskq.o">taskq.o</a>                 28-Nov-2017 15:28  2.4K  
+<hr></pre>
+<pre>
+This directory contains all of the code required to create a parallel
+version of quicksort based on pthreads.  It is based on code developed
+for the Fall, 2010 offering of 15-213/18-243, but with subsequent
+refinements.
+
+Files:
+	csapp.{c,h}:	  Standard routines from CS:APP
+	realtimer.{c,h}:  Code to compute elapsed time for program.
+	taskq.{c,h}:	  Implementation of a multi-threaded task queue
+	qsort.{c,h}:	  Serial &amp; parallel quicksort implementation
+	sortbench.c:	  Benchmarking program.
+	sortbench-run.pl: Run tests and collect data
+	Makefile
+
+	
+	
+</pre>
+</body></html>

@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/13-linking</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/13-linking</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=D">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                10-Oct-2017 11:54  1.8K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="addvec.c">addvec.c</a>                17-Aug-2015 14:54  200   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="addvec.o">addvec.o</a>                10-Oct-2017 11:58  1.3K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="dll.c">dll.c</a>                   17-Aug-2015 15:10  887   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="global">global</a>                  10-Oct-2017 11:58  6.9K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="global-c1.c">global-c1.c</a>             10-Oct-2017 11:43   49   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="global-c2.c">global-c2.c</a>             10-Oct-2017 11:58  214   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="global.h">global.h</a>                10-Oct-2017 11:58   23   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="interpose/">interpose/</a>              09-Oct-2017 11:08    -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="libvector-relo.d">libvector-relo.d</a>        10-Oct-2017 11:58   18K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="libvector.a">libvector.a</a>             10-Oct-2017 11:58  2.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="libvector.so">libvector.so</a>            10-Oct-2017 11:58  6.4K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="libvectordata-relo.d">libvectordata-relo.d</a>    10-Oct-2017 11:58  3.4K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="main-relo.d">main-relo.d</a>             10-Oct-2017 11:58  1.9K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="main.c">main.c</a>                  09-Oct-2017 08:18  157   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="main.o">main.o</a>                  10-Oct-2017 11:58  1.4K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="main.s">main.s</a>                  10-Oct-2017 11:58  415   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="main2-relo.d">main2-relo.d</a>            10-Oct-2017 11:58  2.8K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="main2.c">main2.c</a>                 17-Aug-2015 14:54  235   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="main2.o">main2.o</a>                 10-Oct-2017 11:58  1.7K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="maindata-relo.d">maindata-relo.d</a>         10-Oct-2017 11:58  607   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="mainsym.d">mainsym.d</a>               10-Oct-2017 11:58  787   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="mismatch">mismatch</a>                10-Oct-2017 11:58  6.7K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="mismatch-main.c">mismatch-main.c</a>         09-Oct-2017 09:10  127   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="mismatch-main.o">mismatch-main.o</a>         10-Oct-2017 12:41  1.5K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="mismatch-variable.c">mismatch-variable.c</a>     09-Oct-2017 09:04   45   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="mismatch-variable.o">mismatch-variable.o</a>     10-Oct-2017 12:41  951   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="multvec.c">multvec.c</a>               17-Aug-2015 14:54  208   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="multvec.o">multvec.o</a>               10-Oct-2017 11:58  1.3K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog">prog</a>                    10-Oct-2017 11:58  6.6K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog-exe.d">prog-exe.d</a>              10-Oct-2017 11:58   23K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2c">prog2c</a>                  10-Oct-2017 11:58  872K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2c-exe.d">prog2c-exe.d</a>            10-Oct-2017 11:58  6.7M  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2l">prog2l</a>                  10-Oct-2017 11:58  7.3K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2l-exe.d">prog2l-exe.d</a>            10-Oct-2017 11:58   23K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2ldata-exe.d">prog2ldata-exe.d</a>        10-Oct-2017 11:58  3.5K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="prog2r">prog2r</a>                  10-Oct-2017 11:58  8.6K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="progdata-exe.d">progdata-exe.d</a>          10-Oct-2017 11:58  3.2K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="static-local.c">static-local.c</a>          10-Oct-2016 17:46  160   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="static-local.o">static-local.o</a>          10-Oct-2017 11:58  1.6K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="sum-relo.d">sum-relo.d</a>              10-Oct-2017 11:58  1.9K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="sum.c">sum.c</a>                   17-Aug-2015 14:44  172   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="sum.o">sum.o</a>                   10-Oct-2017 11:58  1.2K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="sumdata-relo.d">sumdata-relo.d</a>          10-Oct-2017 11:58  426   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="symbols.c">symbols.c</a>               09-Oct-2017 08:32  163   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="symbols.o">symbols.o</a>               10-Oct-2017 11:58  1.6K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="vector.h">vector.h</a>                17-Aug-2015 15:10  136   
+<hr></pre>
+<pre>
+
+EXTENSIONS
+        .s: assembly code
+        .d: dissassembled object file
+        .o: relocatable object file
+        .a: static library
+        .so: shared library
+
+FILES
+Makefile
+        "make clean; make" generates all files
+
+main.c
+sum.c
+        Simple example program 
+prog
+        Executable for simple example program
+
+symbols.c
+	Demonstration of what constitutes a symbol in a program
+
+static-local.c
+	Demonstration of how static variables are handled
+
+mismatch-main.c mismatch-variable.c
+	Demonstration of program error due to type mismatch with global variables
+
+global-c1.c global-c2.c global.h
+	Demonstration of use of extern specifier in .h file to avoid type mismatches
+
+main2.c
+addvec.c
+multvec.c
+vector.h
+        Example program for linking at compile time and load time
+prog2c
+prog2l
+        Executables for main2.c linked at compile and load time
+
+dll.c
+        Example program for dynamic linking at run time
+prog2r
+        Executable for dll.c linked at run time
+
+interpose/
+        Interpositioning case study
+</pre>
+</body></html>

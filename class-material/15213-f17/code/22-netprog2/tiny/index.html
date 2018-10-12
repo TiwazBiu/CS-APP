@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/22-netprog2/tiny</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/22-netprog2/tiny</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=D">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/22-netprog2/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                09-Nov-2017 01:20  320   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="cgi-bin/">cgi-bin/</a>                09-Nov-2017 01:20    -   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.c">csapp.c</a>                 09-Nov-2017 01:20   23K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.h">csapp.h</a>                 09-Nov-2017 01:20  6.5K  
+<img src="/icons/image2.gif" alt="[IMG]"> <a href="godzilla.gif">godzilla.gif</a>            09-Nov-2017 01:20   12K  
+<img src="/icons/image2.gif" alt="[IMG]"> <a href="godzilla.jpg">godzilla.jpg</a>            09-Nov-2017 01:20   11K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="home.html">home.html</a>               09-Nov-2017 01:20  120   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="tiny">tiny</a>                    09-Nov-2017 01:20   85K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="tiny.c">tiny.c</a>                  09-Nov-2017 01:20  8.4K  
+<hr></pre>
+<pre>
+Tiny Web server
+Dave O'Hallaron
+Carnegie Mellon University
+
+This is the home directory for the Tiny server, a 200-line Web
+server that we use in "15-213: Intro to Computer Systems" at Carnegie
+Mellon University.  Tiny uses the GET method to serve static content
+(text, HTML, GIF, and JPG files) out of ./ and to serve dynamic
+content by running CGI programs out of ./cgi-bin. The default 
+page is home.html (rather than index.html) so that we can view
+the contents of the directory from a browser.
+
+Tiny is neither secure nor complete, but it gives students an
+idea of how a real Web server works. Use for instructional purposes only.
+
+The code compiles and runs cleanly using gcc 2.95.3 
+on a Linux 2.2.20 kernel.
+
+To install Tiny:
+   Type "tar xvf tiny.tar" in a clean directory. 
+
+To run Tiny:
+   Run "tiny &lt;port&gt;" on the server machine, 
+	e.g., "tiny 8000".
+   Point your browser at Tiny: 
+	static content: http://&lt;host&gt;:8000
+	dynamic content: http://&lt;host&gt;:8000/cgi-bin/adder?1&amp;2
+
+Files:
+  tiny.tar		Archive of everything in this directory
+  tiny.c		The Tiny server
+  Makefile		Makefile for tiny.c
+  home.html		Test HTML page
+  godzilla.gif		Image embedded in home.html
+  README		This file	
+  cgi-bin/adder.c	CGI program that adds two numbers
+  cgi-bin/Makefile	Makefile for adder.c
+
+</pre>
+</body></html>

@@ -68,3 +68,215 @@
 : 1538364732:0;git add docker-relate/Dockerfile docker-relate/zshrc
 : 1538364783:0;cp docker-relate/zshrc ~/.zshrc
 : 1538364803:0;cp ~/.zsh_history docker-relate/zsh_history
+: 1539202204:0;cd lab
+: 1539202208:0;gs
+: 1539202253:0;git add docker-relate/Dockerfile
+: 1539202255:0;gs
+: 1539202265:0;cd 5-tshlab
+: 1539202269:0;make clean
+: 1539202272:0;ls
+: 1539202277:0;cd code
+: 1539202280:0;make clean
+: 1539202283:0;gs
+: 1539202301:0;git rm myfork.so
+: 1539202304:0;gs
+: 1539202356:0;git commit -m "little change to docker"
+: 1539202370:0;vim ~/.zsh_history
+: 1539202412:0;cp ~/.zsh_history /lab/docker-relate/zsh_history
+: 1539202421:0;gs
+: 1539202445:0;git diff ../../docker-relate/zsh_history
+: 1539202510:0;git pushj
+: 1539202514:0;git push
+: 1539202580:0;gs
+: 1539202791:0;git credential-osxkeychain
+: 1539202919:0;ls
+: 1539202932:0;cd ..
+: 1539202934:0;ls
+: 1539202936:0;cd ..
+: 1539202938:0;ls
+: 1539202947:0;cd 4-cachelab
+: 1539202948:0;ls
+: 1539202961:0;cd ..
+: 1539203116:0;git mkdir class-code
+: 1539203127:0;git md class-code
+: 1539203140:0;md class-code
+: 1539203147:0;cd class-code
+: 1539203162:0;md 13-linking
+: 1539203383:0;ls
+: 1539203387:0;rm 13-linking
+: 1539203394:0;rm -rf 13-linking
+: 1539203397:0;ls
+: 1539203526:0;_wget -r http://www.cs.cmu.edu/afs/cs/academic/class/15213-f17/www/code/
+: 1539203613:0;ls
+: 1539203617:0;cd www.cs.cmu.edu
+: 1539203618:0;ls
+: 1539204248:0;cd afs
+: 1539204260:0;cd cs/academic/class/15213-f17/www/code/13-linking
+: 1539204262:0;ls
+: 1539204316:0;make
+: 1539204331:0;man objdump
+: 1539204485:0;vim main-relo.d
+: 1539204594:0;man objdump
+: 1539204623:0;objdump -t main.o
+: 1539204719:0;man objdump 
+: 1539204777:0;objdump -r main.o
+: 1539204797:0;objdump -rd main.o
+: 1539204913:0;vim main-relo.d
+: 1539204956:0;objdump main.o
+: 1539204975:0;objdump -d main.o
+: 1539205450:0;vim main-relo.d
+: 1539205476:0;vim main.c
+: 1539205801:0;ls
+: 1539205838:0;objdump -xd static-local.o
+: 1539205927:0;objdump -t static-local.o
+: 1539206791:0;./mismatch
+: 1539206902:0;vim Makefile
+: 1539208244:0;cd 
+: 1539208250:0;cd /lab
+: 1539208251:0;ls
+: 1539208257:0;gs
+: 1539208267:0;cd class-material
+: 1539208267:0;ls
+: 1539208277:0;cd 15213-f17/code/13-linking
+: 1539208279:0;ls
+: 1539208622:0;man ar
+: 1539208683:0;ar /usr/lib32/libc.a|sort
+: 1539208695:0;ar /usr/lib32/libc.a | sort
+: 1539208705:0;ar -t /usr/lib32/libc.a | sort
+: 1539208749:0;ls -hl /usr/lib32/libc.a
+: 1539208839:0;vim Makefile
+: 1539208877:0;ls 
+: 1539208896:0;ls -a
+: 1539208910:0;ls -al
+: 1539208918:0;rm .Makefile.swp
+: 1539208927:0;vim Makefile
+: 1539210576:0;cd interpose
+: 1539210577:0;ls
+: 1539210585:0;rm index*
+: 1539210587:0;ls
+: 1539210667:0;vim Makefile
+: 1539210735:0;l
+: 1539210740:0;which ls
+: 1539210761:0;gs
+: 1539210771:0;cp ~/.zsh_history /lab/docker-relate/zsh_history
+: 1539210786:0;cd /lab
+: 1539210788:0;gs
+: 1539223089:0;cd class-material/15213-f17/code/13-linking
+: 1539223091:0;ls
+: 1539223124:0;gcc -Ogv -o prog main.c sum.c
+: 1539223134:0;gcc -gv -o prog main.c sum.c
+: 1539223145:0;gcc -Og -v -o prog main.c sum.c
+: 1539223158:0;./prog
+: 1539223163:0;vim main.c
+: 1539223274:0;gs
+: 1539223552:0;man readrlf
+: 1539238206:0;ls
+: 1539238217:0;history
+: 1539238295:0;vim main-relo.d
+: 1539238312:0;objdump -t static-local.o
+: 1539238321:0;ls
+: 1539238335:0;objdump -t main.o
+: 1539238349:0;objdump -t prog
+: 1539238357:0;objdump -r prog
+: 1539238380:0;objdump -r main.o
+: 1539238740:0;readelf
+: 1539238756:0;man readelf
+: 1539238776:0;readelf -a main.o
+: 1539238938:0;which readelf
+: 1539253805:0;gs
+: 1539255900:0;readelf -a prog
+: 1539255969:0;man readelf
+: 1539255995:0;readelf -d prog
+: 1539256043:0;man readelf
+: 1539256111:0;man objdump
+: 1539256123:0;objdump -d prog
+: 1539256175:0;man readelf
+: 1539256189:0;readelf -V prog
+: 1539256304:0;man readelf
+: 1539256328:0;readelf -l prog
+: 1539256375:0;readelf -a prog
+: 1539256497:0;vim prog-exe.d
+: 1539256530:0;vim Makefile
+: 1539256556:0;objdump -dx prog
+: 1539265049:0;gs
+: 1539265579:0;readelf prog
+: 1539265602:0;readelf -d prog
+: 1539265615:0;readelf -a prog
+: 1539265760:0;readelf -a prog2l
+: 1539268527:0;objdump -dx prog
+: 1539268531:0;objdump -dx prog2l
+: 1539269288:0;cd interpose
+: 1539269292:0;ls
+: 1539269382:0;./intc
+: 1539269403:0;chmod +x .
+: 1539269406:0;ls
+: 1539269409:0;ls -l
+: 1539269423:0;make clean
+: 1539269426:0;make
+: 1539269430:0;ls -l
+: 1539269435:0;ls
+: 1539269439:0;./intc
+: 1539269499:0;vim Makefile
+: 1539269531:0;make runc
+: 1539269559:0;vim Makefile
+: 1539269584:0;vim int.c
+: 1539269736:0;make runl
+: 1539269746:0;vim Makefile
+: 1539269956:0;ls
+: 1539269981:0;vim mymalloc.c
+: 1539270090:0;printenv SHELL
+: 1539270137:0;LD_PRELOAD="./mymalloc.so" ls
+: 1539270157:0;LD_PRELOAD="./mymalloc.so" uptime
+: 1539270186:0;LD_PRELOAD="./mymalloc.so" /usr/bin/uptime
+: 1539270226:0;LD_PRELOAD="./mymalloc.so" ./intr
+: 1539270238:0;make intr
+: 1539270245:0;make runr
+: 1539270252:0;vim Makefile
+: 1539270265:0;make runr
+: 1539270310:0;vim mymalloc.o
+: 1539270314:0;vim mymalloc.c
+: 1539270354:0;vim Makefile
+: 1539270367:0;setenv LD_PRELOAD "./mymalloc.so"; ls; unsetenv LD_PRELOAD
+: 1539270384:0;make clean
+: 1539270387:0;ls
+: 1539270389:0;make
+: 1539270394:0;make runr
+: 1539270416:0;gdb LD_PRELOAD="./mymalloc.so" ./intr 10 100 1000
+: 1539270441:0;ls
+: 1539270642:0;vim mymalloc.c
+: 1539272472:0;strings mymalloc.o
+: 1539272491:0;strings intr
+: 1539272515:0;man nm
+: 1539272548:0;nm intc
+: 1539272573:0;size intc
+: 1539272581:0;size intr
+: 1539272587:0;size intl
+: 1539272613:0;ldd intr
+: 1539272616:0;ldd intl
+: 1539272747:0;man printf
+: 1539272774:0;man 3 printf
+: 1539273231:0;man valgrind
+: 1539273277:0;valgrind LD_PRELOAD="./mymalloc.so" ./intr 10 100 1000
+: 1539273358:0;export LD_PRELOAD="./mymalloc.so"
+: 1539273367:0;echo LD_PRELOAD
+: 1539273379:0;echo $LD_PRELOAD
+: 1539273392:0;valgrind ./intr 10 100 1000
+: 1539273413:0;unset $LD_PRELOAD
+: 1539273416:0;valgrind ./intr 10 100 1000
+: 1539273428:0;echo $LD_PRELOAD
+: 1539273435:0;unset LD_PRELOAD
+: 1539273439:0;echo $LD_PRELOAD
+: 1539273442:0;valgrind ./intr 10 100 1000
+: 1539299053:0;gs
+: 1539303462:0;ls
+: 1539303464:0;cd ..
+: 1539303468:0;cd 
+: 1539303499:0;cd /lab/class-material/15213-f17/code/13-linking/interpose
+: 1539303505:0;cd -
+: 1539303519:0;cd /lab
+: 1539303523:0;gs
+: 1539303543:0;cd /lab/class-material/15213-f17/code/13-linking/interpose
+: 1539303547:0;vim Makefile
+: 1539303590:0;cd -
+: 1539303593:0;gs
+: 1539303638:0;cp ~/.zsh_history docker-relate/zsh_history

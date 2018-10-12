@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/16-io</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/16-io</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="qprob/">qprob/</a>                  18-Oct-2017 14:15    -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="hello">hello</a>                   18-Oct-2017 11:31   60K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="ffiles3">ffiles3</a>                 18-Oct-2017 11:31   61K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="ffiles2">ffiles2</a>                 18-Oct-2017 11:31   61K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="ffiles1">ffiles1</a>                 18-Oct-2017 11:31   61K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="cpstdin">cpstdin</a>                 18-Oct-2017 11:31   60K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="cpfile">cpfile</a>                  18-Oct-2017 11:31   60K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="statcheck">statcheck</a>               18-Oct-2017 11:31   61K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="csapp.o">csapp.o</a>                 18-Oct-2017 11:31   76K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                22-Oct-2015 09:20  341   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="statcheck.c">statcheck.c</a>             07-Jul-2015 15:31  646   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="hello.c">hello.c</a>                 07-Jul-2015 15:30  191   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="ffiles3.out">ffiles3.out</a>             07-Jul-2015 15:30   11   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="ffiles3.c">ffiles3.c</a>               07-Jul-2015 15:30  440   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="ffiles2.c">ffiles2.c</a>               07-Jul-2015 15:30  436   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="ffiles1.c">ffiles1.c</a>               07-Jul-2015 15:30  444   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.h">csapp.h</a>                 07-Jul-2015 15:30  5.5K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.c">csapp.c</a>                 07-Jul-2015 15:30   17K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="cpstdin.c">cpstdin.c</a>               07-Jul-2015 15:30  179   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="cpfile.c">cpfile.c</a>                07-Jul-2015 15:30  339   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="abcde.txt">abcde.txt</a>               07-Jul-2015 15:30    5   
+<hr></pre>
+<pre>
+Various programs used in the I/O lecture
+
+cpfile.c
+        Using the RIO routines to copy from stdin to stdout
+
+csapp.{c,h}
+        CS:APP wrappers
+
+ffiles1.c
+ffiles2.c
+ffiles3.c
+        File puzzles
+
+hello.c
+        Demonstrates buffering in libc function
+
+statcheck.c
+        stat example
+</pre>
+</body></html>

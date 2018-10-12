@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/09-machine-advanced</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/09-machine-advanced</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=D">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="smash.txt">smash.txt</a>               25-Sep-2017 13:47   28   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="gadget.c">gadget.c</a>                22-Sep-2015 10:43  168   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="hexify.c">hexify.c</a>                27-Sep-2016 16:06  296   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="runaway.c">runaway.c</a>               25-Sep-2017 11:24  466   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="bufdemo.c">bufdemo.c</a>               23-Sep-2016 10:27  597   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="locate.c">locate.c</a>                25-Sep-2017 11:26  1.0K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                25-Sep-2017 13:45  1.2K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo.64ns">bufdemo.64ns</a>            25-Sep-2017 13:47  1.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo.64s">bufdemo.64s</a>             25-Sep-2017 13:47  1.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="hexify">hexify</a>                  25-Sep-2017 13:47  6.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="runaway">runaway</a>                 25-Sep-2017 13:47  7.0K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="locate64">locate64</a>                25-Sep-2017 11:26  7.5K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo-nsp">bufdemo-nsp</a>             25-Sep-2017 13:47  7.6K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo-sp">bufdemo-sp</a>              25-Sep-2017 13:47  7.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo.64d">bufdemo.64d</a>             25-Sep-2017 13:47   14K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="bufdemo.64nd">bufdemo.64nd</a>            25-Sep-2017 13:47   14K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="locate-all.xlsx">locate-all.xlsx</a>         11-Aug-2015 11:59   52K  
+<hr></pre>
+<pre>
+Extensions:
+	.64s: x86-64 assembly code
+	.64d: x86-64 disassembly
+	.64ns: x86-64 assembly code with stack protection disabled
+	.64nd: x86-64 disassembly with stack protection disabled
+
+FILES
+
+bufdemo.c
+bufdemo.64s
+bufdemo.64ns
+bufdemo.64d
+bufdemo.64nd
+	Buffer overflow demonstration code
+
+bufdemo-sp
+bufdemo-nsp
+	Compiled versions of bufdemo.c with/without stack protection
+
+locate.c
+	Code to print addresses of interesting memory locations
+
+locate64
+
+runaway.c
+runaway
+	Demonstration that recursive functions can run out of stack space
+
+
+locate-all.xlsx
+	Spreadsheet showing results of 5 executions of locate64
+
+hexify.c
+hexify
+	Program to convert hex sequence on command line into a string.
+	Useful for generating exploits
+
+smash.txt
+	Stack smashing string.  Run:
+	cat smash.txt | ./bufdemo-nsp
+
+</pre>
+</body></html>

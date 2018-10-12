@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/02-03-bits-ints</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/02-03-bits-ints</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=D">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                06-Aug-2015 09:50  260   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="show-bytes.c">show-bytes.c</a>            17-Aug-2015 16:12  2.7K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="sb64-15213.txt">sb64-15213.txt</a>          17-Aug-2015 16:19  406   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="show-bytes32">show-bytes32</a>            31-Aug-2017 11:36  7.6K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="show-bytes64">show-bytes64</a>            31-Aug-2017 11:36  8.9K  
+<hr></pre>
+<pre>
+show-bytes.c
+        Demonstrates byte respresentations of different data types
+
+show-bytes.{32,64}
+        32- and 64-byte versions of show-bytes.c
+
+sb64-15213.txt
+        Output of ./show-bytes64 15213
+
+
+</pre>
+</body></html>

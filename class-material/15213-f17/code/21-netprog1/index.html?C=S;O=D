@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/21-netprog1</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/21-netprog1</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="echoserveri">echoserveri</a>             09-Nov-2017 01:18   75K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="hostinfo">hostinfo</a>                09-Nov-2017 01:18   74K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="echoclient">echoclient</a>              09-Nov-2017 01:18   73K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.c">csapp.c</a>                 09-Nov-2017 01:18   23K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.h">csapp.h</a>                 09-Nov-2017 01:18  6.5K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="hostinfo.c">hostinfo.c</a>              09-Nov-2017 01:18  1.2K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="echoserveri.c">echoserveri.c</a>           09-Nov-2017 01:18  912   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="echoclient.c">echoclient.c</a>            09-Nov-2017 01:18  650   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="echo.c">echo.c</a>                  09-Nov-2017 01:18  404   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                09-Nov-2017 01:18  281   
+<hr></pre>
+<pre>
+Programs used in first lecture on network programming
+
+csapp.{c,h}
+	CS:APP wrappers.  Of particular interest are functions open_clientfd, and open_listenfd
+
+hostinfo.c:
+	Code demonstrating use of getaddrinfo and getnameinfo to retrieve DNS information
+
+echoclient.c, echoserveri.c, echo.c:
+	Echo client and server to demonstrate sockets code for client/server application
+
+</pre>
+</body></html>

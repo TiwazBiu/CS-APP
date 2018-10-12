@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /afs/cs/academic/class/15213-f17/www/code/26-parallelism</title>
+ </head>
+ <body>
+<h1>Index of /afs/cs/academic/class/15213-f17/www/code/26-parallelism</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=A">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/afs/cs/academic/class/15213-f17/www/code/">Parent Directory</a>                             -   
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="psum">psum</a>                    28-Nov-2017 15:30   29K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="psum.xlsx">psum.xlsx</a>               28-Nov-2017 15:30   26K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="csapp.o">csapp.o</a>                 28-Nov-2017 15:30   18K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.c">csapp.c</a>                 28-Nov-2017 15:30   17K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="psum.c">psum.c</a>                  28-Nov-2017 15:30  6.7K  
+<img src="/icons/text.gif" alt="[TXT]"> <a href="csapp.h">csapp.h</a>                 28-Nov-2017 15:30  5.5K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="realtimer.o">realtimer.o</a>             28-Nov-2017 15:30  1.9K  
+<img src="/icons/unknown.gif" alt="[   ]"> <a href="Makefile">Makefile</a>                28-Nov-2017 15:30  775   
+<img src="/icons/p.gif" alt="[   ]"> <a href="psum-run.pl">psum-run.pl</a>             28-Nov-2017 15:30  739   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="psum-data.txt">psum-data.txt</a>           28-Nov-2017 15:30  697   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="psum-backup.txt">psum-backup.txt</a>         28-Nov-2017 15:30  697   
+<img src="/icons/p.gif" alt="[   ]"> <a href="psum-spacing.pl">psum-spacing.pl</a>         28-Nov-2017 15:30  605   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="psum-spacing.txt">psum-spacing.txt</a>        28-Nov-2017 15:30  500   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="realtimer.c">realtimer.c</a>             28-Nov-2017 15:30  437   
+<img src="/icons/text.gif" alt="[TXT]"> <a href="realtimer.h">realtimer.h</a>             28-Nov-2017 15:30  176   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="tmp/">tmp/</a>                    28-Nov-2017 15:27    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="pqsort/">pqsort/</a>                 28-Nov-2017 15:28    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="pqsort-dbug/">pqsort-dbug/</a>            28-Nov-2017 15:28    -   
+<hr></pre>
+</body></html>
