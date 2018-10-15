@@ -26,7 +26,7 @@
 
 /* Global data */
 bool initialized = false;
-bool verbose = false;
+bool verbose = true;
 bool delay_parent = true;
 bool delay_child = true;
 

@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -g
 
-all: intr intl intc
+all: intr intl intc badintr
 
 #####
 # Run-time interpositioning
@@ -13,6 +13,12 @@ intr: int.c mymalloc.c
 runr: intr
 	(LD_PRELOAD="./mymalloc.so" ./intr 10 100 1000)	
 
+badintr: int.c badmalloc.c
+	$(CC) $(CFLAGS) -DRUNTIME -shared -fpic -o badmalloc.so badmalloc.c -ldl
+	$(CC) $(CFLAGS) -o intr int.c 
+
+badrunr: intr
+	(LD_PRELOAD="./badmalloc.so" ./intr 10 100 1000)	
 #####
 # Link-time interpositioning
 #

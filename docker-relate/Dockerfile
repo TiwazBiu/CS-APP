@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     git-core \
     inetutils-ping \
     net-tools \
+    strace \
     man  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
