@@ -333,7 +333,7 @@ void fork14()
 
     for (i = 0; i < N; i++) {
 	if ((pid[i] = Fork()) == 0) {
-	    Sleep(1);
+            printf("hello from child %d\n", (int)getpid());
 	    exit(0);  /* Child exits */
 	}
     }
@@ -373,7 +373,7 @@ void fork15()
 
     for (i = 0; i < N; i++)
 	if ((pid[i] = Fork()) == 0) {
-	    Sleep(1);
+            printf("hello from child %d\n", (int)getpid());
 	    exit(0); /* Child exits */
 
 	}

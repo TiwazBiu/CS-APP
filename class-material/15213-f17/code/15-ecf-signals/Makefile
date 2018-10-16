@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Og -g
 LDLIBS = -lpthread -lrt
 
-PROGS = forks execs internal shellex signaldeadlock loop sigint sigintsafe procmask1 procmask2 waitforsignal sigsuspend setjmp restart delay myfork.so
+PROGS = snooze forks execs internal shellex signaldeadlock loop sigint sigintsafe procmask1 procmask2 waitforsignal sigsuspend setjmp restart delay myfork.so
 
 all: $(PROGS)
 
@@ -13,6 +13,7 @@ myfork.so: myfork.c ms_delay.h ms_delay.c
 process-race: process-race.c ms_delay.c csapp.c
 
 
+snooze: snooze.c csapp.c
 signaldeadlock: signaldeadlock.c csapp.c
 shellex: shellex.c csapp.c
 forks: forks.c csapp.c

@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     inetutils-ping \
     net-tools \
     strace \
+    locales \
     man  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -29,7 +30,6 @@ RUN vim -S /root/.vim/supertab.vmb -c ':q!'  2>&1
 
 
 # Set the locale
-RUN apt-get update && apt-get install -y locales
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
 ENV LANG en_US.UTF-8  
