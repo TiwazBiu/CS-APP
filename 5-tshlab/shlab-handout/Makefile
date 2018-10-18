@@ -1,24 +1,18 @@
 # Makefile for the CS:APP Shell Lab
 
-TEAM = NOBODY
-VERSION = 1
-HANDINDIR = /afs/cs/academic/class/15213-f02/L5/handin
 DRIVER = ./sdriver.pl
 TSH = ./tsh
 TSHREF = ./tshref
 TSHARGS = "-p"
 CC = gcc
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -O2 -g
+LDLIBS = -lpthread -lrt
+
 FILES = $(TSH) ./myspin ./mysplit ./mystop ./myint
 
 all: $(FILES)
 
-##################
-# Handin your work
-##################
-handin:
-	cp tsh.c $(HANDINDIR)/$(TEAM)-$(VERSION)-tsh.c
-
+$(TSH): tsh.c csapp.c 
 
 ##################
 # Regression tests
