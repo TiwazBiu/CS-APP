@@ -2,7 +2,8 @@
  * mm.c
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
- * implict list, not much to say, wanna move to next lab, leave it for a moment
+ * implict list with first fit and optimazied realloc function
+ * Perf index = 43 (util) & 0 (thru) = 43/100
  */
 
 #include <assert.h>
@@ -260,6 +261,17 @@ static void place(uint32_t *block, size_t asize)
     }
 
 }
+
+// computer how much block size is needed when given memory size
+static inline size_t alloct_size(size_t size)
+{
+    size_t asize;
+    if (size <= DSIZE)
+        asize = 2 * DSIZE;
+    else // uprounded size plus overhead
+        asize = DSIZE * ((size + DSIZE + DSIZE - 1) / DSIZE); 
+    return asize;
+}
 /*
  *  Malloc Implementation
  *  ---------------------
@@ -292,15 +304,11 @@ void *malloc (size_t size) {
     size_t asize;      // Adjusted block size
     size_t extendsize; // Amount to extend heap if no fit
     uint32_t *block;
-    // checkheap(1);      // Let's make sure the heap is ok!
+    // checkheap(2);      // Let's make sure the heap is ok!
     
     if (size == 0)
         return NULL;
-    if (size <= DSIZE)
-        asize = 2 * DSIZE;
-    else // uprounded size plus overhead
-        asize = DSIZE * ((size + DSIZE + DSIZE - 1) / DSIZE); 
-
+    asize = alloct_size(size); // get actual size needed
     if ((block = find_fit(asize)) == NULL) { // No fit found. Get more memory
         extendsize = MAX(asize, CHUNKSIZE);
         // dbg_printf("extend size : %lu\n", extendsize);
@@ -308,7 +316,7 @@ void *malloc (size_t size) {
             return NULL;
     }
     place(block, asize);
-    // checkheap(1);
+    // checkheap(2);
     return block_mem(block);
 }
 
@@ -326,12 +334,17 @@ void free (void *ptr) {
 }
 
 /*
- * realloc - you may want to look at mm-naive.c
+ * realloc - only choose another block when original block 
+ * can't hold new size data.
  */
 void *realloc(void *oldptr, size_t size) {
-    // checkheap(1);
     void *newptr;
-    size_t oldsize;
+    size_t oldsize;// block original size 
+    size_t asize; // actual use space
+    uint32_t *bp; // corresponding block pointer
+    uint32_t *next_bp;// next block pointer
+
+    
     if (size == 0) {
         free(oldptr);
         return NULL;
@@ -339,21 +352,44 @@ void *realloc(void *oldptr, size_t size) {
     if (oldptr == NULL) {
         return malloc(size);
     }
-    
-    newptr = malloc(size);
-    if (newptr == NULL) { // realloc failed
-        return NULL;
-    }
-    oldsize = MIN(GET_SIZE(BLOCK(oldptr)), size);
-    memcpy(newptr, oldptr, oldsize);
+    // up-rounded size to compare with block size
+    asize = alloct_size(size);
+    bp = BLOCK(oldptr); 
+    oldsize = block_size(bp);
+    next_bp = block_next(bp);
+    REQUIRES(in_heap(next_bp));
 
-    free(oldptr);
-    // checkheap(1);
-    return newptr;
+    if (oldsize >= asize) {
+        place(bp, asize); // change allocted block size when possible
+        return block_mem(bp);
+    }
+    // add next possible free block size to see if whole size is lagger than requested
+    else if (!block_alloc(next_bp) &&
+                (oldsize + block_size(next_bp) >= asize)) { 
+        oldsize += block_size(next_bp);
+        PUT(FTRP(next_bp), PACK(oldsize, 0));
+        PUT(bp, PACK(oldsize, 0));
+
+        place(bp, asize);
+        
+        // checkheap(2);
+        return block_mem(bp);
+
+    }
+    else {
+        newptr = malloc(size);
+        if (!newptr) { // realloc failed
+            return NULL;
+        }
+        oldsize = MIN(oldsize, size);
+        memcpy(newptr, oldptr, oldsize);
+        free(oldptr);
+        return newptr;
+    }
 }
 
 /*
- * calloc - you may want to look at mm-naive.c
+ * calloc - malloc and then memset
  */
 void *calloc (size_t nmemb, size_t size) {
     size_t bytes = nmemb * size;
@@ -374,11 +410,11 @@ int mm_checkheap(int verbose) {
     while (in_heap(bp)) {
         size = block_size(bp);
         sums += size;
-        if (verbose > 2){
-            dbg_printf("current block pointer: %p\t size: %lu\n", (void*)bp, size);
+        if (verbose >= 2){
+            dbg_printf("check block %p\t, size: %lu\n", (void*)bp, size);
         }
         if (size == 0){
-            dbg_printf("heap maybe normal, current position: %lu/%ld\n",
+            dbg_printf("last position: %lu/%ld\n",
                 sums, (bp - heap_listp)*WSIZE);
             return 0;
         }
