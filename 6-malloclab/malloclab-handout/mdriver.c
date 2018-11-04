@@ -714,6 +714,23 @@ static void check_index(const trace_t *trace, int opnum, int index) {
 /*
  * read_trace - read a trace file and store it in memory
  */
+static void Fscanf(FILE *stream, const char *format, ...)
+{
+    int rc;
+    int olderrno;
+    va_list ap;
+    va_start(ap, format);
+    olderrno = errno;
+    errno = 0;
+    if ((rc = vfscanf(stream, format, ap)) == EOF){
+        if (errno != 0)
+            perror("vfscanf");
+        else
+            fprintf(stderr, "No matching characters");
+    }
+    errno = olderrno;
+    va_end(ap);
+}
 static trace_t *read_trace(stats_t *stats, const char *tracedir,
                            const char *filename)
 {
@@ -737,10 +754,10 @@ static trace_t *read_trace(stats_t *stats, const char *tracedir,
     if ((tracefile = fopen(trace->filename, "r")) == NULL) {
         unix_error("Could not open %s in read_trace", trace->filename);
     }
-    fscanf(tracefile, "%d", &trace->weight);
-    fscanf(tracefile, "%d", &trace->num_ids);
-    fscanf(tracefile, "%d", &trace->num_ops);
-    fscanf(tracefile, "%d", &trace->ignore_ranges);
+    Fscanf(tracefile, "%d", &trace->weight);
+    Fscanf(tracefile, "%d", &trace->num_ids);
+    Fscanf(tracefile, "%d", &trace->num_ops);
+    Fscanf(tracefile, "%d", &trace->ignore_ranges);
 
     if(trace->weight < 0 || trace->weight > 3) {
         app_error("%s: weight can only be in {0, 1, 2 3}", trace->filename);
@@ -776,21 +793,21 @@ static trace_t *read_trace(stats_t *stats, const char *tracedir,
     while (fscanf(tracefile, "%s", type) != EOF) {
         switch(type[0]) {
         case 'a':
-            fscanf(tracefile, "%d %d", &index, &size);
+            Fscanf(tracefile, "%d %d", &index, &size);
             trace->ops[op_index].type = ALLOC;
             trace->ops[op_index].index = index;
             trace->ops[op_index].size = size;
             max_index = (index > max_index) ? index : max_index;
             break;
         case 'r':
-            fscanf(tracefile, "%d %d", &index, &size);
+            Fscanf(tracefile, "%d %d", &index, &size);
             trace->ops[op_index].type = REALLOC;
             trace->ops[op_index].index = index;
             trace->ops[op_index].size = size;
             max_index = (index > max_index) ? index : max_index;
             break;
         case 'f':
-            fscanf(tracefile, "%d", &index);
+            Fscanf(tracefile, "%d", &index);
             trace->ops[op_index].type = FREE;
             trace->ops[op_index].index = index;
             break;
