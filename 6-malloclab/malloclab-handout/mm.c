@@ -2,8 +2,8 @@
  * mm.c
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
- * implict list with first fit and optimazied realloc function
- * Perf index = 43 (util) & 0 (thru) = 43/100
+ * implict list with best fit and optimazied realloc function
+ * Perf index = 47 (util) & 0 (thru) = 43/100
  */
 
 #include <assert.h>
@@ -237,14 +237,24 @@ static uint32_t* extend_heap(size_t words)
     return coalesce(block);
 }
 
-// find first fit in implict free list
+// find best fit in implict free list
 static void* find_fit(size_t asize)
 {   
+    size_t min_remain = -1;
+    uint32_t *best_bp = NULL;
     for (uint32_t* bp = heap_listp; block_size(bp) > 0; bp = block_next(bp)){
-        if (!block_alloc(bp) && block_size(bp) >= asize)
-            return bp;
+        if (!block_alloc(bp)){
+            size_t size = block_size(bp);
+            if (size == asize){
+                return bp;
+            }
+            else if (size > asize && size - asize < min_remain){
+                min_remain = size - asize;
+                best_bp = bp;
+            }
+        }
     }
-    return NULL;
+    return best_bp;
 }
 
 // set allocked block in the heap and split block when possible
