@@ -2,8 +2,8 @@
  * mm.c
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
- * implict list with first fit and optimazied realloc function
- * Perf index = 43 (util) & 0 (thru) = 43/100
+ * implict list with best fit and optimazied realloc function
+ * Perf index = 47 (util) & 0 (thru) = 47/100
  */
 
 #include <assert.h>
@@ -47,7 +47,7 @@
 #endif
 
 /* 
- * Basic constants and macros
+ * constants and macros to get block information
  */
 
 #define WSIZE 4             // Word and header/footer size(bytes)
@@ -76,13 +76,13 @@
 #define NEXT_BLOCK(block) ((uint32_t *)(block) + (GET_SIZE(block) >> 2))
 #define PREV_BLOCK(block) ((uint32_t *)(block) - (GET_SIZE((uint32_t *)(block) - 1) >> 2))
 
-// Given block memory ptr bmp, get block ptr;
-#define BLOCK(bmp) ((uint32_t *)(bmp) - 1) 
+// Given block memory poniter ptr, get pointer pointing header of block;
+#define BLOCK(ptr) ((uint32_t *)(ptr) - 1) 
 
 
 // Private global varible
-static uint32_t *heap_listp;
-
+static uint32_t* heap_listp;
+// static uint32_t* free_listp; // header pointer for explict list
 
 /*
  *  Helper functions
@@ -142,13 +142,10 @@ static inline void block_mark(uint32_t* block, int alloced, size_t size) {
     next = (size - WSIZE);
     mark = alloced ? (size | 0x1) : (size & ~0x7);
     PUT(block, mark);
-    // REQUIRES(in_heap((char*)block + next)); // check whether the size is valid
     PUT((char*)block + next, mark);
-    
-    
 }
 
-// Return a pointer to the memory malloc should return
+// Return a pointer to the memory that malloc should return to user
 static inline uint32_t* block_mem(uint32_t* const block) {
     REQUIRES(block != NULL);
     REQUIRES(in_heap(block));
@@ -178,6 +175,25 @@ static inline uint32_t* block_next(uint32_t* const block) {
     REQUIRES(in_heap(bp));
     return bp;
 }
+
+// computer how much block size is needed when given memory size
+static inline size_t actual_size(size_t msize) {
+    size_t asize;
+    if (msize <= DSIZE)
+        asize = 2 * DSIZE;
+    else // uprounded size plus overhead
+        asize = DSIZE * ((msize + DSIZE + DSIZE - 1) / DSIZE); 
+    return asize;
+}
+
+
+/*
+ *  Middle Level Functions
+ *  ---------------
+ *  The functions below use functions above to implement crucial functionalities
+ *  to manipunate block.
+ */
+
 
 // coalesce free blocks
 static uint32_t* coalesce(uint32_t *block)
@@ -218,7 +234,8 @@ static uint32_t* coalesce(uint32_t *block)
         return prev_bp;
     }
 }
-// extend  the heap with a new free block
+
+// extend heap with a new free block
 static uint32_t* extend_heap(size_t words)
 {
     size_t size;
@@ -230,25 +247,30 @@ static uint32_t* extend_heap(size_t words)
     REQUIRES(aligned(block));   // check validity of alignment
     block--;                        // get to orignal epologue header
     block_mark(block, 0, size);
-    // dbg_printf("after extend, block %p size: %lu, should be %lu\n", 
-    //             (void*)block, block_size(block), size);
+
     PUT(NEXT_BLOCK(block), PACK(0, 1));   // New epilogue header
-    // checkheap(1);
+    
     return coalesce(block);
 }
 
-// find next fit in implict free list
+// find best fit in implict free list
 static void* find_fit(size_t asize)
 {   
-    uint32_t *bp = NULL;
-    if (bp == NULL)
-        bp = heap_listp;
-
-    for (size_t size = block_size(bp); size > 0; bp = block_next(bp)){
-        if (!block_alloc(bp) && size >= asize)
-            return bp;
+    size_t min_remain = -1;
+    uint32_t *best_bp = NULL;
+    for (uint32_t* bp = heap_listp; block_size(bp) > 0; bp = block_next(bp)){
+        if (!block_alloc(bp)){
+            size_t size = block_size(bp);
+            if (size == asize){
+                return bp;
+            }
+            else if (size > asize && size - asize < min_remain){
+                min_remain = size - asize;
+                best_bp = bp;
+            }
+        }
     }
-    return NULL;
+    return best_bp;
 }
 
 // set allocked block in the heap and split block when possible
@@ -266,16 +288,8 @@ static void place(uint32_t *block, size_t asize)
 
 }
 
-// computer how much block size is needed when given memory size
-static inline size_t alloct_size(size_t size)
-{
-    size_t asize;
-    if (size <= DSIZE)
-        asize = 2 * DSIZE;
-    else // uprounded size plus overhead
-        asize = DSIZE * ((size + DSIZE + DSIZE - 1) / DSIZE); 
-    return asize;
-}
+
+
 /*
  *  Malloc Implementation
  *  ---------------------
@@ -292,8 +306,7 @@ int mm_init(void) {
     PUT(heap_listp + 1, PACK(DSIZE, 1));     // Prologue header
     PUT(heap_listp + 2, PACK(DSIZE, 1));     // Prologue footer
     PUT(heap_listp + 3, PACK(0, 1));         // Epilogue header
-    
-    // heap_listp += 1;
+    heap_listp += 1;
 
     if (extend_heap(CHUNKSIZE/WSIZE) == NULL)
         return -1;
@@ -313,15 +326,14 @@ void *malloc (size_t size) {
     
     if (size == 0)
         return NULL;
-    asize = alloct_size(size); // get actual size needed
+    asize = actual_size(size); // get actual size needed
     if ((block = find_fit(asize)) == NULL) { // No fit found. Get more memory
         extendsize = MAX(asize, CHUNKSIZE);
-        
+        // dbg_printf("extend size : %lu\n", extendsize);
         if ((block = extend_heap(extendsize/WSIZE)) == NULL) // extend heap failed
             return NULL;
     }
     place(block, asize);
-    // checkheap(2);
     return block_mem(block);
 }
 
@@ -329,7 +341,6 @@ void *malloc (size_t size) {
  * free
  */
 void free (void *ptr) {
-    // checkheap(1);
     if (ptr == NULL) {
         return;
     }
@@ -339,8 +350,8 @@ void free (void *ptr) {
 }
 
 /*
- * realloc - only choose another block when original block 
- * can't hold new size data.
+ * realloc - only choose another block when 
+ * original block can't hold new size data.
  */
 void *realloc(void *oldptr, size_t size) {
     void *newptr;
@@ -358,8 +369,8 @@ void *realloc(void *oldptr, size_t size) {
         return malloc(size);
     }
     // up-rounded size to compare with block size
-    asize = alloct_size(size);
-    bp = BLOCK(oldptr); 
+    asize = actual_size(size);
+    bp = BLOCK(oldptr); // get block pointer
     oldsize = block_size(bp);
     next_bp = block_next(bp);
     REQUIRES(in_heap(next_bp));
@@ -368,7 +379,7 @@ void *realloc(void *oldptr, size_t size) {
         place(bp, asize); // change allocted block size when possible
         return block_mem(bp);
     }
-    // add next possible free block size to see if whole size is lagger than requested
+    // if next block is free, add it to see if whole size is larger than requested
     else if (!block_alloc(next_bp) &&
                 (oldsize + block_size(next_bp) >= asize)) { 
         oldsize += block_size(next_bp);
@@ -376,11 +387,10 @@ void *realloc(void *oldptr, size_t size) {
         PUT(bp, PACK(oldsize, 0));
 
         place(bp, asize);
-        
-        // checkheap(2);
         return block_mem(bp);
 
     }
+    // need malloc a new place and copy the data
     else {
         newptr = malloc(size);
         if (!newptr) { // realloc failed
@@ -394,7 +404,7 @@ void *realloc(void *oldptr, size_t size) {
 }
 
 /*
- * calloc - malloc and then memset
+ * calloc - simple implemetation, just malloc and then memset
  */
 void *calloc (size_t nmemb, size_t size) {
     size_t bytes = nmemb * size;
@@ -415,7 +425,7 @@ int mm_checkheap(int verbose) {
     while (in_heap(bp)) {
         size = block_size(bp);
         sums += size;
-        if (verbose >= 2){
+        if (verbose > 1){
             dbg_printf("check block %p\t, size: %lu\n", (void*)bp, size);
         }
         if (size == 0){
