@@ -81,7 +81,7 @@
 
 
 // Private global varible
-static uint32_t* heap_listp;
+static uint32_t *heap_listp;
 
 
 /*
@@ -237,11 +237,15 @@ static uint32_t* extend_heap(size_t words)
     return coalesce(block);
 }
 
-// find first fit in implict free list
+// find next fit in implict free list
 static void* find_fit(size_t asize)
 {   
-    for (uint32_t* bp = heap_listp; block_size(bp) > 0; bp = block_next(bp)){
-        if (!block_alloc(bp) && block_size(bp) >= asize)
+    uint32_t *bp = NULL;
+    if (bp == NULL)
+        bp = heap_listp;
+
+    for (size_t size = block_size(bp); size > 0; bp = block_next(bp)){
+        if (!block_alloc(bp) && size >= asize)
             return bp;
     }
     return NULL;
@@ -288,7 +292,8 @@ int mm_init(void) {
     PUT(heap_listp + 1, PACK(DSIZE, 1));     // Prologue header
     PUT(heap_listp + 2, PACK(DSIZE, 1));     // Prologue footer
     PUT(heap_listp + 3, PACK(0, 1));         // Epilogue header
-    heap_listp += 1;
+    
+    // heap_listp += 1;
 
     if (extend_heap(CHUNKSIZE/WSIZE) == NULL)
         return -1;
@@ -311,7 +316,7 @@ void *malloc (size_t size) {
     asize = alloct_size(size); // get actual size needed
     if ((block = find_fit(asize)) == NULL) { // No fit found. Get more memory
         extendsize = MAX(asize, CHUNKSIZE);
-        // dbg_printf("extend size : %lu\n", extendsize);
+        
         if ((block = extend_heap(extendsize/WSIZE)) == NULL) // extend heap failed
             return NULL;
     }
