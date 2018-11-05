@@ -2,8 +2,8 @@
  * mm.c
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
- * implict list with best fit and optimazied realloc function
- * Perf index = 47 (util) & 0 (thru) = 43/100
+ * implict list with  next fit and optimazied realloc function
+ * Perf index = 9 (util) & 0 (thru) = 9/100
  */
 
 #include <assert.h>
@@ -82,6 +82,7 @@
 
 // Private global varible
 static uint32_t* heap_listp;
+static uint32_t* search_bp; // used for next fit search, get updated by place function return value
 
 
 /*
@@ -179,6 +180,36 @@ static inline uint32_t* block_next(uint32_t* const block) {
     return bp;
 }
 
+// static int is_block(uint32_t *block)
+// {
+//     uint32_t *startp = heap_listp;
+//     while (in_heap(startp) && block_size(startp) != 0){
+//         dbg_printf("%p->\t", (void*)startp);
+//         if (startp == block){
+//             dbg_printf("\nconfirmed\n");
+//             return 1;
+//         }
+//         startp = block_next(startp);
+//     }
+//     if (block_size(startp) == 0 && block == startp)
+//         return 1;
+//     return 0;
+// }
+
+
+// update search block pointer for  next fit
+static void search_update(uint32_t *block)
+{
+    // if (block != NULL && (!in_heap(block) || !is_block(block))){
+    if (block != NULL && !in_heap(block)){
+        dbg_printf("search pointer update failed, illegal block pointer: %p\n\n", 
+                (void*)block);
+        exit(-1);
+    }   
+    search_bp = block;
+    dbg_printf("search block pointer updated:%p\n\n", (void*)search_bp);
+}
+
 // coalesce free blocks
 static uint32_t* coalesce(uint32_t *block)
 {
@@ -201,6 +232,9 @@ static uint32_t* coalesce(uint32_t *block)
         size += block_size(next_bp);
         PUT(FTRP(next_bp), PACK(size, 0));
         PUT(block, PACK(size, 0));
+        if (search_bp == next_bp){
+            search_update(block);
+        }
         return block;
     } 
     
@@ -208,6 +242,9 @@ static uint32_t* coalesce(uint32_t *block)
         size += block_size(prev_bp);
         PUT(HDRP(prev_bp), PACK(size, 0));
         PUT(FTRP(block), PACK(size, 0));
+        if (search_bp == block){
+            search_update(prev_bp);
+        }
         return prev_bp;
     }
 
@@ -215,6 +252,9 @@ static uint32_t* coalesce(uint32_t *block)
         size += block_size(prev_bp) + block_size(next_bp);
         PUT(HDRP(prev_bp), PACK(size, 0));
         PUT(FTRP(next_bp), PACK(size, 0));
+        if (search_bp == block || search_bp == next_bp){
+            search_update(prev_bp);
+        }
         return prev_bp;
     }
 }
@@ -228,48 +268,48 @@ static uint32_t* extend_heap(size_t words)
     if ((block = mem_sbrk(size)) == (void *)-1) 
         return NULL;
     REQUIRES(aligned(block));   // check validity of alignment
-    block--;                        // get to orignal epologue header
+    block--;                    // get to orignal epologue header
     block_mark(block, 0, size);
-    // dbg_printf("after extend, block %p size: %lu, should be %lu\n", 
-    //             (void*)block, block_size(block), size);
+    
     PUT(NEXT_BLOCK(block), PACK(0, 1));   // New epilogue header
+    dbg_printf("heap extend, new end: %p\n", (void*)NEXT_BLOCK(block));
+    
     // checkheap(1);
     return coalesce(block);
 }
 
-// find best fit in implict free list
-static void* find_fit(size_t asize)
+// find next fit in implict free list
+static void* find_fit(size_t asize, uint32_t * const start_block)
 {   
-    size_t min_remain = -1;
-    uint32_t *best_bp = NULL;
-    for (uint32_t* bp = heap_listp; block_size(bp) > 0; bp = block_next(bp)){
-        if (!block_alloc(bp)){
-            size_t size = block_size(bp);
-            if (size == asize){
-                return bp;
-            }
-            else if (size > asize && size - asize < min_remain){
-                min_remain = size - asize;
-                best_bp = bp;
-            }
-        }
+    uint32_t* bp;
+    
+    if (start_block == NULL || block_size(start_block) == 0)
+        bp = heap_listp;
+    else
+        bp = start_block;
+    
+    for (   ; block_size(bp) > 0; bp = block_next(bp)){
+        if (!block_alloc(bp) && block_size(bp) >= asize)
+            return bp;
     }
-    return best_bp;
+    return NULL;
 }
 
-// set allocked block in the heap and split block when possible
-static void place(uint32_t *block, size_t asize)
+// split block when block orignal size is larger than mini block size plus asize
+// return reminder of free block if there is any
+static uint32_t* place(uint32_t *block, size_t asize)
 {
     size_t fsize = block_size(block);
     size_t remain = fsize - asize;
     if (remain < 4 * WSIZE) { // not enough space to split
         block_mark(block, 1, fsize);
+        return NULL;
     } else {
         block_mark(block, 1, asize);
         block = block_next(block);
         block_mark(block, 0, remain);
+        return block;
     }
-
 }
 
 // computer how much block size is needed when given memory size
@@ -292,8 +332,10 @@ static inline size_t alloct_size(size_t size)
  * Initialize: return -1 on error, 0 on success.
  */
 int mm_init(void) {
+    dbg_printf("heap initialize\n\n\n");
     if ((heap_listp = mem_sbrk(4*WSIZE)) == (void *)-1) 
         return -1;
+    search_bp = NULL;
     PUT(heap_listp, 0);                      // Alignment padding
     PUT(heap_listp + 1, PACK(DSIZE, 1));     // Prologue header
     PUT(heap_listp + 2, PACK(DSIZE, 1));     // Prologue footer
@@ -314,19 +356,29 @@ void *malloc (size_t size) {
     size_t asize;      // Adjusted block size
     size_t extendsize; // Amount to extend heap if no fit
     uint32_t *block;
-    // checkheap(2);      // Let's make sure the heap is ok!
-    
+    dbg_printf("heap check before malloc:\n");
+    checkheap(1);      // Let's make sure the heap is ok!
+    dbg_printf("\n\n\n");
+
     if (size == 0)
         return NULL;
     asize = alloct_size(size); // get actual size needed
-    if ((block = find_fit(asize)) == NULL) { // No fit found. Get more memory
+    if ((block = find_fit(asize, search_bp)) != NULL) { // No fit found. Get more memory
+        search_update(place(block, asize));
+    } else {
         extendsize = MAX(asize, CHUNKSIZE);
-        // dbg_printf("extend size : %lu\n", extendsize);
-        if ((block = extend_heap(extendsize/WSIZE)) == NULL) // extend heap failed
+        if ((block = extend_heap(extendsize/WSIZE)) == NULL){ // extend heap failed
+            dbg_printf("Run out of memory\n");
             return NULL;
+        }
+        place(block, asize);
+
     }
-    place(block, asize);
-    // checkheap(2);
+
+    dbg_printf("heap check after malloc:\n");
+    checkheap(2);
+    dbg_printf("\n\n\n");
+
     return block_mem(block);
 }
 
@@ -370,19 +422,21 @@ void *realloc(void *oldptr, size_t size) {
     REQUIRES(in_heap(next_bp));
 
     if (oldsize >= asize) {
-        place(bp, asize); // change allocted block size when possible
+        search_update(place(bp, asize));
         return block_mem(bp);
     }
-    // add next possible free block size to see if whole size is lagger than requested
+    // add next possible free block size to see if whole size is larger than requested
     else if (!block_alloc(next_bp) &&
                 (oldsize + block_size(next_bp) >= asize)) { 
+        
         oldsize += block_size(next_bp);
         PUT(FTRP(next_bp), PACK(oldsize, 0));
         PUT(bp, PACK(oldsize, 0));
 
         place(bp, asize);
-        
-        // checkheap(2);
+        if (search_bp == next_bp)
+            search_update(bp);
+
         return block_mem(bp);
 
     }
@@ -421,11 +475,11 @@ int mm_checkheap(int verbose) {
         size = block_size(bp);
         sums += size;
         if (verbose >= 2){
-            dbg_printf("check block %p\t, size: %lu\n", (void*)bp, size);
+            dbg_printf("check block %p\t, size: %lu, %s\n", 
+                (void*)bp, size, block_alloc(bp)? "allocted":"free");
         }
-        if (size == 0){
-            dbg_printf("last position: %lu/%ld\n",
-                sums, (bp - heap_listp)*WSIZE);
+        if (size == 0 && sums == (size_t)(bp - heap_listp)*WSIZE){
+            dbg_printf("heap looks fine, epilogue position: %p\n", (void*)bp);
             return 0;
         }
         bp = NEXT_BLOCK(bp);
