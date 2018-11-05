@@ -3,7 +3,7 @@
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
  * implict list with best fit and optimazied realloc function
- * Perf index = 47 (util) & 0 (thru) = 43/100
+ * Perf index = 47 (util) & 0 (thru) = 47/100
  */
 
 #include <assert.h>
