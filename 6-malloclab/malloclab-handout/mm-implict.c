@@ -47,7 +47,7 @@
 #endif
 
 /* 
- * Basic constants and macros
+ * constants and macros to get block information
  */
 
 #define WSIZE 4             // Word and header/footer size(bytes)
@@ -176,6 +176,25 @@ static inline uint32_t* block_next(uint32_t* const block) {
     return bp;
 }
 
+// computer how much block size is needed when given memory size
+static inline size_t actual_size(size_t msize) {
+    size_t asize;
+    if (msize <= DSIZE)
+        asize = 2 * DSIZE;
+    else // uprounded size plus overhead
+        asize = DSIZE * ((msize + DSIZE + DSIZE - 1) / DSIZE); 
+    return asize;
+}
+
+
+/*
+ *  Middle Level Functions
+ *  ---------------
+ *  The functions below use functions above to implement crucial functionalities
+ *  to manipunate block.
+ */
+
+
 // coalesce free blocks
 static uint32_t* coalesce(uint32_t *block)
 {
@@ -215,6 +234,7 @@ static uint32_t* coalesce(uint32_t *block)
         return prev_bp;
     }
 }
+
 // extend heap with a new free block
 static uint32_t* extend_heap(size_t words)
 {
@@ -268,16 +288,6 @@ static void place(uint32_t *block, size_t asize)
 
 }
 
-// computer how much block size is needed when given memory size
-static inline size_t actual_size(size_t msize)
-{
-    size_t asize;
-    if (msize <= DSIZE)
-        asize = 2 * DSIZE;
-    else // uprounded size plus overhead
-        asize = DSIZE * ((msize + DSIZE + DSIZE - 1) / DSIZE); 
-    return asize;
-}
 
 
 /*
@@ -331,7 +341,6 @@ void *malloc (size_t size) {
  * free
  */
 void free (void *ptr) {
-    // checkheap(1);
     if (ptr == NULL) {
         return;
     }
@@ -361,7 +370,7 @@ void *realloc(void *oldptr, size_t size) {
     }
     // up-rounded size to compare with block size
     asize = actual_size(size);
-    bp = BLOCK(oldptr); 
+    bp = BLOCK(oldptr); // get block pointer
     oldsize = block_size(bp);
     next_bp = block_next(bp);
     REQUIRES(in_heap(next_bp));

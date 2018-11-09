@@ -16,8 +16,8 @@
 
 /* Linked list element (You shouldn't need to change this) */
 typedef struct ELE {
-    int value;
     struct ELE *next;
+    int value;
 } list_ele_t;
 
 /* Queue structure */

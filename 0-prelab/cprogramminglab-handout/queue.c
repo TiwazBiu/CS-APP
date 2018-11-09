@@ -23,9 +23,10 @@
 queue_t *q_new()
 {
     queue_t *q;
+    /* What if malloc returned NULL? */
     if((q = (queue_t *) malloc(sizeof(queue_t))) == NULL)
       return NULL;
-    /* What if malloc returned NULL? */
+    
     q->head = NULL;
     q->tail = NULL;
     q->size = 0;
@@ -163,8 +164,6 @@ void q_reverse(queue_t *q)
 
       pre = nex;
       nex = tmp;
-
-
     }
     q->tail = q->head;
     q->tail->next = NULL;
