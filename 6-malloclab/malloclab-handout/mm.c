@@ -2,9 +2,8 @@
  * mm.c
  * xiezhiwen mail: zhiwenxie1900@outlook.com
  *
- * explict list with good enough fit, performance index very from 56-82
- * based on the change of GOODENOUGH and CHUNKSIZE parameter
- * Best Perf index = 43 (util) & 39 (thru) = 82/100 (G:1,C:1<<10)
+ * segregated list with good enough fit
+ * Best Perf index = 52 (util) & 39 (thru) = 91/100
  *
  */
 
@@ -54,8 +53,14 @@
 
 #define WSIZE 4             // Word and header/footer size(bytes)
 #define DSIZE 8             // Double word size(bytes)
-#define GOOD_ENOUGH 1       // find at most GOOD_ENOUGH fits
+#define GOOD_ENOUGH 2       // find at most GOOD_ENOUGH fits
 #define CHUNKSIZE (1<<10)   // Extend heap by this amount(bytes)
+
+#define CLASS1_SIZE 1<<6
+#define CLASS2_SIZE 1<<8
+#define CLASS3_SIZE 1<<10
+#define CLASS4_SIZE 1<<12
+
 
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x,y) ((x) < (y) ? (x) : (y))
@@ -87,14 +92,14 @@
  *  ----------------
  */
 
-// Private global varible
 static uint32_t *heap_listp;
-static uint32_t *free_listp; // header pointer for explict free block list
 
-// static uint32_t *class1_listp; // ready for segregated list
-// static uint32_t *class2_listp;
-// static uint32_t *class3_listp;
-// static uint32_t *class4_listp;
+// segregated list pointers
+static uint32_t* class1_listp; // smallest class
+static uint32_t* class2_listp;
+static uint32_t* class3_listp;
+static uint32_t* class4_listp;
+static uint32_t* free_listp; // biggest class
 
 
 /*
@@ -247,7 +252,107 @@ static inline uint32_t* get_next(uint32_t* block) {
     return get_pointer(distance);
 }
 
+// choose which list to look for the correspond size, 
+// return the address of list pointer
+static inline uint32_t** choose_list(size_t size)
+{
+    if (size <= CLASS1_SIZE) 
+        return &class1_listp;
+    else if (size <= CLASS2_SIZE)
+        return &class2_listp;
+    else if (size <= CLASS3_SIZE)
+        return &class3_listp;
+    else if (size <= CLASS4_SIZE)
+        return &class4_listp;
+    else
+        return &free_listp;
+}
 
+static inline void listname(uint32_t** listp) {
+    if (listp == &class1_listp){
+        dbg_printf("class1\n");
+    }
+    else if (listp == &class2_listp){
+        dbg_printf("class2\n");
+    }
+    else if (listp == &class3_listp){
+        dbg_printf("class3\n");
+    }
+    else if (listp == &class4_listp){
+        dbg_printf("class4\n");
+    }
+    else if (listp == &free_listp){
+        dbg_printf("class5\n");
+    }
+}
+static inline void free_list_init(void) {
+    free_listp = NULL;
+    class1_listp = NULL;
+    class2_listp = NULL;
+    class3_listp = NULL;
+    class4_listp = NULL;
+}
+
+
+static inline int is_head(uint32_t* bp) {
+    uint32_t *prev = get_prev(bp);
+    if (prev == NULL)
+        return 1;
+    return 0;
+}
+
+static inline int is_tail(uint32_t* bp) {
+    uint32_t *next = get_next(bp);
+    if (next == NULL)
+        return 1;
+    return 0;
+}
+
+static uint32_t** upper_list(uint32_t** listp) {
+    if (listp == &class1_listp)
+        return &class2_listp;
+    else if (listp == &class2_listp)
+        return &class3_listp;
+    else if (listp == &class3_listp)
+        return &class4_listp;
+    else if (listp == &class4_listp)
+        return &free_listp;
+    else
+        return NULL;
+}
+
+
+// look for a bigger size class free list, if already biggest, return NULL
+static uint32_t** lookup(uint32_t** listp) {
+    uint32_t** next_listp = upper_list(listp);
+    while (next_listp != NULL) {
+        if (*next_listp != NULL){
+            return next_listp;
+        } else {
+            next_listp = upper_list(next_listp);
+        }
+    }
+    return NULL; // current list class already biggest
+}
+
+// look for first free block start from *listp, if no free block found, return NULL
+static uint32_t* get_free_block(uint32_t** listp) {
+    uint32_t* bp;
+    if (listp == NULL)
+        return NULL;
+    
+    bp = *listp;
+    if (bp != NULL) {
+        return bp;
+    } else {
+        listp = lookup(listp);
+        if (listp == NULL)
+            return NULL; // no free block
+        else
+            return *listp;
+    }
+    return NULL;
+}
 /*
  *  Explict Free List Functions
  *  ---------------
@@ -256,14 +361,19 @@ static inline uint32_t* get_next(uint32_t* block) {
 
 // insert a block to head of free block list, since we need to change 
 // the value of listp itself, so we should pass the pointer of listp
-static inline void insert(uint32_t* block, uint32_t* *listp) {
-    // REQUIRES(in_heap(block));
+static void insert(uint32_t* block) {
+    REQUIRES(in_heap(block));
+    REQUIRES(!block_alloc(block));
+
+    size_t size = block_size(block);
+    uint32_t** listp = choose_list(size);
+
     if (*listp == NULL) { // empty free list
         *listp = block;
         // it's both head and tail
         set_next(block, NULL);
         set_prev(block, NULL);
-    } else {
+    } else { // insert to head
         uint32_t *bp = *listp;
         *listp = block;
         set_prev(block, NULL); // free block is now head
@@ -273,21 +383,29 @@ static inline void insert(uint32_t* block, uint32_t* *listp) {
 }
 
 // delete a block from free list to use it
-static inline void delete(uint32_t* block, uint32_t* *listp) {
-    // REQUIRES(in_heap(block));
-    // REQUIRES(!block_alloc(block));
+static void delete(uint32_t* block) {
+    REQUIRES(in_heap(block));
+    REQUIRES(!block_alloc(block));
 
     uint32_t* prev_bp = get_prev(block);
     uint32_t* next_bp = get_next(block);
-    if (*listp == block) { // block is head
-        *listp = NULL;
-        if (next_bp != NULL)
+
+    size_t size = block_size(block);
+    uint32_t** listp = choose_list(size);
+
+    if (is_head(block)) { // no prev block
+        if (next_bp == NULL) // no next block
+            *listp = NULL;
+        else{ // next block exist
             *listp = next_bp;
-    }
-    if (prev_bp != NULL) // block is not the head
+            set_prev(next_bp, NULL);
+        }
+
+    } else { // prev block exit
         set_next(prev_bp, next_bp);
-    if (next_bp != NULL) // block is not the tail
-        set_prev(next_bp, prev_bp);
+        if (next_bp != NULL) // next block exist
+            set_prev(next_bp, prev_bp);
+    }
 
 }
 /*
@@ -301,10 +419,9 @@ static inline void delete(uint32_t* block, uint32_t* *listp) {
 // add block to free list, coalesce them if possible
 static uint32_t* coalesce(uint32_t *block)
 {
-    // REQUIRES(block != NULL);
-    // REQUIRES(in_heap(block));
-    // REQUIRES(aligned(block + 1));
-
+    REQUIRES(block != NULL);
+    REQUIRES(in_heap(block));
+    REQUIRES(aligned(block + 1));
     uint32_t* prev_bp = block_prev(block);
     uint32_t* next_bp = block_next(block);
     
@@ -313,35 +430,47 @@ static uint32_t* coalesce(uint32_t *block)
     
     size_t size = block_size(block);
     if (prev_alloc && next_alloc) {
-        insert(block, &free_listp);
+        insert(block);
         return block;
     } 
     // alter the free list accordingly
     else if (prev_alloc && !next_alloc) {
-        delete(next_bp, &free_listp);
-        
+        delete(next_bp);
         size += block_size(next_bp);
         PUT(FTRP(next_bp), PACK(size, 0));
         PUT(block, PACK(size, 0));
         
-        insert(block, &free_listp);
+        insert(block);
         return block;
     } 
-    // in this case, we don't nedd to change free list
-    else if (!prev_alloc && next_alloc) {
-        size += block_size(prev_bp);
-        PUT(prev_bp, PACK(size, 0));
-        PUT(FTRP(block), PACK(size, 0));
+    // in this case, we need to check size to see if it can be moved to bigger class
+    else if (!prev_alloc) {
+        size_t prev_size = block_size(prev_bp);
+        uint32_t** current_list = choose_list(prev_size); // look which list  preb block is
+        uint32_t** next_list;
+        
+        prev_size += size;
+        if (!next_alloc) { // next block is also free
+            delete(next_bp);
+            prev_size += block_size(next_bp);
+            PUT(FTRP(next_bp), PACK(prev_size, 0));
+        } else {
+            PUT(FTRP(block), PACK(prev_size, 0));
+        }
+        
+        next_list = choose_list(prev_size);
+        
+        if (current_list == next_list){
+            PUT(prev_bp, PACK(prev_size, 0));
+        } else {
+            delete(prev_bp); // delete from original free list
+            PUT(prev_bp, PACK(prev_size, 0));
+            insert(prev_bp); // add to new free list
+        }
         return prev_bp;
     }
 
-    else {
-        delete(next_bp, &free_listp);
-        size += block_size(prev_bp) + block_size(next_bp);
-        PUT(prev_bp, PACK(size, 0));
-        PUT(FTRP(next_bp), PACK(size, 0));
-        return prev_bp;
-    }
+    return NULL;
 }
 
 // extend heap with a new free block
@@ -359,16 +488,23 @@ static uint32_t* extend_heap(size_t words)
 
     PUT(NEXT_BLOCK(block), PACK(0, 1));   // New epilogue header
     
-    return coalesce(block);
+    block = coalesce(block);
+    checkheap(2);
+    return block;
 }
 
 // find good enough fit in explict free list
 static void* find_fit(size_t asize)
 {   
-    size_t min_remain = -1; // max
-    int good = 0; 
+    size_t min_remain = -1; // max 
     uint32_t *best_bp = NULL;
-    for (uint32_t* bp = free_listp; bp != NULL && block_size(bp) > 0; bp = get_next(bp)){
+    int good = 0;
+    uint32_t* bp;
+    uint32_t** listp; // choose which free list to start with
+
+    listp = choose_list(asize);
+    bp = get_free_block(listp);
+    while (bp != NULL && block_size(bp) > 0) {
         if (!block_alloc(bp)){
             size_t size = block_size(bp);
             if (size == asize){ // perfect fit
@@ -381,11 +517,18 @@ static void* find_fit(size_t asize)
                     break;
             }
         } else {
-            checkheap(2);
+
             dbg_printf("error in find fit, go through free list," 
                         "block %p is not a free block\n", (void*)bp);
             exit(-1);
         }
+
+        bp = get_next(bp); // get to next block in this list
+        if (bp == NULL){ // end of this class kind, look bigger class list
+            listp = lookup(listp);
+            bp = get_free_block(listp);
+        }  
+            
     }
     return best_bp;
 }
@@ -407,7 +550,7 @@ static void split(uint32_t *block, size_t asize) {
 
 // delete block from free list, allocate it, and split if possible 
 static void place(uint32_t *block, size_t asize) {
-    delete(block, &free_listp);
+    delete(block);
     split(block, asize);
 }
 
@@ -422,7 +565,7 @@ static void place(uint32_t *block, size_t asize) {
  * Initialize: return -1 on error, 0 on success.
  */
 int mm_init(void) {
-    free_listp = NULL; // no free block available from start
+    free_list_init(); // initialize free lists
 
     if ((heap_listp = mem_sbrk(4*WSIZE)) == (void *)-1) 
         return -1;
@@ -446,7 +589,7 @@ void *malloc (size_t size) {
     size_t asize;      // Adjusted block size
     size_t extendsize; // Amount to extend heap if no fit
     uint32_t *block;
-    // checkheap(2);      // Let's make sure the heap is ok!
+    checkheap(2);      // Let's make sure the heap is ok!
     
     if (size == 0)
         return NULL;
@@ -471,6 +614,7 @@ void free (void *ptr) {
     uint32_t* block = BLOCK(ptr); // get block pointer from ptr to memory
     block_mark(block, 0, 0); // mark alloc bit to 0, don't change size
     coalesce(block);
+    checkheap(2);
 }
 
 /*
@@ -507,7 +651,7 @@ void *realloc(void *oldptr, size_t size) {
     else if (!block_alloc(next_bp) &&
                 (oldsize + block_size(next_bp) >= asize)) { 
 
-        delete(next_bp, &free_listp);
+        delete(next_bp);
         oldsize += block_size(next_bp);
         PUT(FTRP(next_bp), PACK(oldsize, 0));
         PUT(bp, PACK(oldsize, 0));
@@ -561,15 +705,44 @@ int mm_checkheap(int verbose) {
         sums += size;
         if (verbose > 1){
             dbg_printf("checking heap, block %p, size: %lu, state: %s, "
-                        "free blocks: %d\n",
+                        "\ttotal free blocks: %d\n",
                         (void*)bp, size, alloc?"allocted":"free", num);
         }
 
-        if (size == 0){
+        if (size == 0){ // epilogue
             dbg_printf("last position: %p, relative position: %lu/%ld\n",
                 (void*)bp, sums, (bp - heap_listp)*WSIZE);
             heap_ok = 1;
             break;
+        }
+
+        if (size == 8){// header
+            bp = NEXT_BLOCK(bp);
+            continue;
+        } 
+        uint32_t* next = block_next(bp);
+        uint32_t* prev = block_prev(bp);
+
+        if (in_heap(next) && block_size(next) != 0) { 
+            uint32_t* block = block_prev(next);
+            if (block != bp) {
+                dbg_printf("Error: block header/footer adnormal\n"
+                    "prev(bp)=%p, next(bp)=%p, "
+                    "prev(next(bp))=%p not equal to bp=%p\n",
+                    (void*)prev, (void*)next,(void*)block, (void*)bp);
+                return -1;
+            }
+        } 
+
+        if (in_heap(prev)) { 
+            uint32_t* block = block_next(prev);
+            if (block != bp) {
+                dbg_printf("Error: block header/footer adnormal\n"
+                    "prev(bp)=%p, next(bp)=%p, "
+                    "prev(next(bp))=%p not equal to bp=%p\n",
+                    (void*)prev, (void*)next,(void*)block, (void*)bp);
+                return -1;
+            }
         }
         bp = NEXT_BLOCK(bp);
     }
@@ -578,8 +751,19 @@ int mm_checkheap(int verbose) {
         return -1;
     }
 
-    // checking free list
-    bp = free_listp;
+    // checking free lists
+    dbg_printf("current value of class pointer:"
+                "\nclass1:%p\nclass2:%p\nclass3:%p\nclass4:%p\nclass5:%p\n",
+                (void*)class1_listp,(void*)class2_listp,(void*)class3_listp,
+                (void*)class4_listp,(void*)free_listp);
+    
+    uint32_t **listp = &class1_listp;
+    bp = get_free_block(listp);
+
+    if (bp == NULL) // no free block
+        free_list_ok = 1;
+    else
+        listp = choose_list(block_size(bp)); // in case bp come from another free list
     while(bp != NULL && in_heap(bp)) {
         int alloc = block_alloc(bp);
         if (!alloc)
@@ -608,10 +792,6 @@ int mm_checkheap(int verbose) {
                 return -1;
             }
         } 
-        else {// end of free list
-            free_list_ok = 1;
-            break;
-        }
 
         if (prev != NULL) {
             uint32_t* block = get_next(prev);
@@ -625,6 +805,20 @@ int mm_checkheap(int verbose) {
         }
 
         bp = get_next(bp);
+        if (bp == NULL) {
+            dbg_printf("current list: ");
+            listname(listp);
+            listp = lookup(listp);
+            bp = get_free_block(listp);
+            if (bp != NULL){
+                dbg_printf("\nmove to next free list, ");
+                listname(listp);
+            } else{
+                dbg_printf("end of free lists check\n");
+                free_list_ok = 1;
+                break;
+            }
+        }
     }
 
     if (!free_list_ok){
@@ -635,6 +829,7 @@ int mm_checkheap(int verbose) {
     if (num != 0){
         dbg_printf("free block inconsistent\n");
         return -1;
+
     }
 
     dbg_printf("heap normal\n\n");
